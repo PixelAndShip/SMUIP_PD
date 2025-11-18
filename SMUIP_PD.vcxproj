@@ -123,12 +123,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Channel.h" />
     <ClInclude Include="GST.h" />
+    <ClInclude Include="Output.h" />
     <ClInclude Include="OutputSimState.h" />
-    <ClInclude Include="Queue.h" />
-    <ClInclude Include="Request.h" />
-    <ClInclude Include="SimState.h" />
+    <ClInclude Include="OutputSimStates.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />

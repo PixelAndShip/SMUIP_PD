@@ -1,99 +1,166 @@
-#include "SimState.h"
+#include "OutputSimStates.h"
+#include <string>
 #include <vector>
 #include "GST.h"
+#include "Output.h"
+
+GST GSTable;
+Output OP;
 
 
-int main(){
-	
+
+
+
+void generateWaitTime(OutputSimState* nextIteration, int type) {
+	GSTable.currentNumberId += 1;
+
+	if ((GSTable.currentNumberId - 1) < GSTable.randomNumbers.size()) {
+		switch (type) {
+		case 1:
+			if (GSTable.randomNumbers[GSTable.currentNumberId - 1] <= 1.00) {
+				nextIteration->generatedA1WaitTime = 4;
+			}
+			if (GSTable.randomNumbers[GSTable.currentNumberId - 1] <= 0.66) {
+				nextIteration->generatedA1WaitTime = 3;
+			}
+			if (GSTable.randomNumbers[GSTable.currentNumberId - 1] <= 0.33) {
+				nextIteration->generatedA1WaitTime = 2;
+			}
+			nextIteration->savedA1WaitTime = nextIteration->generatedA1WaitTime;
+			break;
+		case 2:
+			if (GSTable.randomNumbers[GSTable.currentNumberId - 1] <= 1.00) {
+				nextIteration->generatedK1WaitTime = 4;
+			}
+			if (GSTable.randomNumbers[GSTable.currentNumberId - 1] <= 0.66) {
+				nextIteration->generatedK1WaitTime = 3;
+			}
+			if (GSTable.randomNumbers[GSTable.currentNumberId - 1] <= 0.33) {
+				nextIteration->generatedK1WaitTime = 2;
+			}
+			nextIteration->savedK1WaitTime = nextIteration->generatedK1WaitTime;
+			break;
+		case 3:
+			if (GSTable.randomNumbers[GSTable.currentNumberId - 1] <= 1.0) {
+				nextIteration->generatedK2WaitTime = 8;
+			}
+			if (GSTable.randomNumbers[GSTable.currentNumberId - 1] <= 0.8) {
+				nextIteration->generatedK2WaitTime = 7;
+			}
+			if (GSTable.randomNumbers[GSTable.currentNumberId - 1] <= 0.6) {
+				nextIteration->generatedK2WaitTime = 6;
+			}
+			if (GSTable.randomNumbers[GSTable.currentNumberId - 1] <= 0.4) {
+				nextIteration->generatedK2WaitTime = 5;
+			}
+			if (GSTable.randomNumbers[GSTable.currentNumberId - 1] <= 0.2) {
+				nextIteration->generatedK2WaitTime = 4;
+			}
+			nextIteration->savedK2WaitTime = nextIteration->generatedK2WaitTime;
+			break;
+		}
+
+
+	}
 
 
 }
 
-void startSim() {
-	SimState* U_4_61 = new SimState(0,0);
-	
-	generateIteration(U_4_61);
 
 
 
-
-}
-
-
-//TODO: Before calling this function, must write 
-SimState generateIteration(SimState* lastIteration) {
-	
-	int nextIterN = determineNextIteration(lastIteration);
-	int GS_Id = lastIteration->UsedGS.back();
-	SimState* nextIteration = new SimState(nextIterN, lastIteration->processedRequestsCount);
-	//TODO: 2.generate next iteration 3.also make sure to process first generation
-	if (lastIteration->K2.RequestBeingProcessed!=nullptr) {
-		if (lastIteration->K2.RequestBeingProcessed->waitTime < nextIterN) {
-			nextIteration->K2.RequestBeingProcessed = lastIteration->K2.RequestBeingProcessed;
-			delete lastIteration->K2.RequestBeingProcessed;
-		}
-		else if (lastIteration->K2.RequestBeingProcessed->waitTime == nextIterN) {
-			nextIteration->processedRequestsCount += 1;
-			delete lastIteration->K2.RequestBeingProcessed;
+void manageNextIteration(OutputSimState* lastIteration, OutputSimState* nextIteration,int sNIID){ 
+	if (lastIteration->savedK2WaitTime != sNIID) {
+		nextIteration->savedK2WaitTime = lastIteration->savedK2WaitTime;
+	}
+	else if (lastIteration->savedK2WaitTime == sNIID) {
+		nextIteration->K2.push_back(0);
+		nextIteration->processingK2 = false;
+		nextIteration->processedRequests += 1;
+		if (lastIteration->R1 != 0) {
+			nextIteration->R1 -= 1;
+			generateWaitTime(nextIteration, 3);
+			nextIteration->usedGS.push_back(GSTable.currentNumberId);
+			nextIteration->K2.push_back(1);
 		}
 	}
-	else {
-		//TODO: Process adding Request to K2 by generating new waittime for it and also processing the queue R1
+
+	else if (lastIteration->savedK1WaitTime != sNIID) {
+		nextIteration->savedK1WaitTime = lastIteration->savedK1WaitTime;
 	}
-	if (lastIteration->R1.firstInLine != nullptr) {
-		nextIteration->R1 = lastIteration->R1;
-		if (nextIteration->K2.RequestBeingProcessed == nullptr) {
-			nextIteration->K2.RequestBeingProcessed = lastIteration->R1.firstInLine;
-			nextIteration->R1.firstInLine = lastIteration->R1.firstInLine->nextInLine;
-			nextIteration->K2.RequestBeingProcessed->nextInLine = nullptr;
-		}
-		
-	}
-	if (lastIteration->K1.RequestBeingProcessed != nullptr) {
-		if (lastIteration->K1.RequestBeingProcessed->waitTime < nextIterN) {
-			nextIteration->K1.RequestBeingProcessed = lastIteration->K1.RequestBeingProcessed;
-			delete lastIteration->K1.RequestBeingProcessed;
-		}
-		else if (lastIteration->K1.RequestBeingProcessed->waitTime == nextIterN) {
-			nextIteration->R1.appendToQueue(lastIteration->K1.RequestBeingProcessed);
-		}
-	}
-	if (lastIteration->A1.RequestBeingProcessed != nullptr) {
-		if (lastIteration->A1.RequestBeingProcessed->waitTime < nextIterN) {
-			nextIteration->A1.RequestBeingProcessed = lastIteration->A1.RequestBeingProcessed;
-			delete lastIteration->A1.RequestBeingProcessed;
-		}
-		else if (lastIteration->A1.RequestBeingProcessed->waitTime == nextIterN) {
-			if (nextIteration->K1.RequestBeingProcessed == nullptr) {
-				nextIteration->K1.RequestBeingProcessed = lastIteration->A1.RequestBeingProcessed;
-				nextIteration->K1.RequestBeingProcessed->generateK1WaitTime();
+	else if (lastIteration->savedK1WaitTime == sNIID) {
+		nextIteration->K1.push_back(0);
+		if (nextIteration->R1 == 0) {
+			if (nextIteration->processingK2 == false) {
+				generateWaitTime(nextIteration, 3);
+				nextIteration->usedGS.push_back(GSTable.currentNumberId);
+				nextIteration->K2.push_back(1);
+				nextIteration->processingK2 = true;
+			}
+			else {
+				nextIteration->R1 += 1;
 			}
 		}
+		else {
+			nextIteration->R1 += 1;
+		}
 	}
-	else {
-		nextIteration->A1.RequestBeingProcessed = new Request();
-		nextIteration->A1.RequestBeingProcessed->generateA1WaitTime();
+
+	else if (lastIteration->savedA1WaitTime != sNIID) {
+		nextIteration->savedA1WaitTime = lastIteration->savedA1WaitTime;
+	}
+	else if (lastIteration->savedA1WaitTime == sNIID) {
+		if (nextIteration->processingK1 == false) {
+			generateWaitTime(nextIteration, 2);
+			nextIteration->usedGS.push_back(GSTable.currentNumberId);
+			nextIteration->K1.push_back(1);
+			nextIteration->processingK1 = true;
+		}
+	}
+	if (lastIteration->savedA1WaitTime == 0) {
+		generateWaitTime(nextIteration, 1);
+	}
+
+}
+
+
+
+
+
+int getNextIterationNumber(OutputSimState* lastIteration) {
+	int nums[] = { lastIteration->savedA1WaitTime,lastIteration->savedK1WaitTime,lastIteration->savedK2WaitTime };
+	int n = sizeof(nums) / sizeof(nums[0]);
+	int smallestNextIterationID = *std::min_element(nums,nums+n);
+	return smallestNextIterationID;
+}
+OutputSimState* generateIteration(OutputSimState* lastIteration) {
+
+	OutputSimState* newIteration = new OutputSimState(lastIteration->savedA1WaitTime, lastIteration->savedK1WaitTime, lastIteration->savedK2WaitTime, lastIteration->R1, lastIteration->processedRequests);
+	int smallestNextIterationID = getNextIterationNumber(lastIteration);
+	newIteration->currentTime = smallestNextIterationID;
+	manageNextIteration(lastIteration, newIteration, smallestNextIterationID);
+	return newIteration;
+}
+
+void manageSim() {
+	OutputSimStates* OSS = new OutputSimStates();
+	OutputSimState* firstIteration = new OutputSimState();
+	OutputSimState* newIteration = generateIteration(firstIteration);
+	OP.printOutputSimState(*newIteration);
+	OSS->SS.push_back(newIteration);
+	while (OSS->SS.back()->processedRequests != 4) {
+		
+		newIteration = generateIteration(newIteration);
+		OSS->SS.push_back(newIteration);
+		OP.printOutputSimState(*newIteration);
 	}
 }
 
-int determineNextIteration(SimState* U_4_61) {
 
-	int nextIter = 10000000;
-	
-	if (U_4_61!=nullptr) {
-		SimState previousIteration = *U_4_61;
-		if (previousIteration.A1.RequestBeingProcessed->waitTime<nextIter) {
-			nextIter = previousIteration.A1.RequestBeingProcessed->waitTime;
-		}
-		if (previousIteration.K1.RequestBeingProcessed->waitTime < nextIter) {
-			nextIter = previousIteration.K1.RequestBeingProcessed->waitTime;
-		}
-		if (previousIteration.R1.firstInLine->waitTime < nextIter) {
-			nextIter = previousIteration.R1.firstInLine->waitTime;
-		}
-		if (previousIteration.K2.RequestBeingProcessed->waitTime < nextIter) {
-			nextIter = previousIteration.K2.RequestBeingProcessed->waitTime;
-		}
-	}
-	return nextIter;
+
+
+int main() {
+	manageSim();
+
+
 }
