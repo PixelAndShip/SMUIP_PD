@@ -2,6 +2,8 @@
 #include "Request.h"
 class Channel {
 public:
-    Request RequestBeingProcessed;
-   
+    Request* RequestBeingProcessed = nullptr;
+    
+
+
 };

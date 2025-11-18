@@ -15,27 +15,16 @@ public:
         };
     };
 
-    void generateRequest() {
-        //TODO: make request waittime generator
-        Request* newRequest = new Request(1);
-        
+    void appendToQueue(Request* newR) {
         Request* currentRequest = firstInLine;
-        if (currentRequest == nullptr) {
-            firstInLine = newRequest;
+        while (currentRequest != nullptr) {
+            if (currentRequest->nextInLine == nullptr) {
+                currentRequest->nextInLine = newR;
+                break;
+            }
+            currentRequest = currentRequest->nextInLine;
         }
-        else {
-            while (currentRequest != nullptr) {
-                
-                Request* nextRequest = currentRequest->nextInLine;
-                if (nextRequest == nullptr) {
-                    currentRequest->nextInLine = newRequest;
-                    break;
-                }
-                else {
-                    currentRequest = nextRequest;
-                }
-            };
-        }
-        
-    };
+    }
+
+    
 };
