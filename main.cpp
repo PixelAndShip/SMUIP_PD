@@ -72,7 +72,9 @@ void generateWaitTime(OutputSimState* nextIteration, int type) {
 void manageNextIteration(OutputSimState* lastIteration, OutputSimState* nextIteration,int sNIID){ 
 	if (lastIteration->savedK2WaitTime != sNIID) {
 		nextIteration->savedK2WaitTime = lastIteration->savedK2WaitTime;
-		nextIteration->processingK2 = true;
+		if (lastIteration->processingK2 == true) {
+			nextIteration->processingK2 = true;
+		}
 		
 	}
 	else if (lastIteration->savedK2WaitTime == sNIID) {
@@ -80,6 +82,7 @@ void manageNextIteration(OutputSimState* lastIteration, OutputSimState* nextIter
 			nextIteration->processedRequests += 1;
 			nextIteration->processingK2 = false;
 			nextIteration->K2 = 0;
+			nextIteration->savedK2WaitTime = 0;
 			return;
 		}
 	}
@@ -99,12 +102,16 @@ void manageNextIteration(OutputSimState* lastIteration, OutputSimState* nextIter
 	
 	if (lastIteration->savedK1WaitTime != sNIID) {
 		nextIteration->savedK1WaitTime = lastIteration->savedK1WaitTime;
-		nextIteration->processingK1 = true;
+		if (lastIteration->processingK1 == true) {
+			nextIteration->processingK1 = true;
+		}
+		
 
 	}
 	else if (lastIteration->savedK1WaitTime==sNIID) {
 		nextIteration->processingK1 = false;
 		nextIteration->K1 = 0;
+		nextIteration->savedK1WaitTime = 0;
 		if (nextIteration->processingK2 == false) {
 			nextIteration->processingK2 = true;
 			generateWaitTime(nextIteration, 3);
@@ -121,12 +128,13 @@ void manageNextIteration(OutputSimState* lastIteration, OutputSimState* nextIter
 		nextIteration->savedA1WaitTime = lastIteration->savedA1WaitTime;
 	}
 	else if (lastIteration->savedA1WaitTime == sNIID) {
+		nextIteration->savedA1WaitTime = 0;
 		if (nextIteration->processingK1 == false) {
 			nextIteration->processingK1 = true;
-
+			nextIteration->K1 = 1;
 			generateWaitTime(nextIteration, 2);
 			nextIteration->savedK1WaitTime = nextIteration->generatedK1WaitTime;
-			return;
+			
 		}
 		generateWaitTime(nextIteration, 1);
 		nextIteration->savedA1WaitTime = nextIteration->generatedA1WaitTime;
@@ -155,7 +163,7 @@ int getNextIterationNumber(OutputSimState* lastIteration) {
 }
 OutputSimState* generateIteration(OutputSimState* lastIteration) {
 
-	OutputSimState* newIteration = new OutputSimState(lastIteration->savedA1WaitTime,lastIteration->savedK1WaitTime,lastIteration->savedK2WaitTime);
+	OutputSimState* newIteration = new OutputSimState(lastIteration->savedA1WaitTime,lastIteration->savedK1WaitTime,lastIteration->savedK2WaitTime,lastIteration->processedRequests);
 	int smallestNextIterationID = getNextIterationNumber(lastIteration);
 	newIteration->currentTime = smallestNextIterationID;
 	manageNextIteration(lastIteration, newIteration, smallestNextIterationID);
