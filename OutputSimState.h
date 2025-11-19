@@ -26,7 +26,7 @@ public:
 	OutputSimState() {
 
 	}
-	OutputSimState(int lSavedA1,int lSavedK1, int lSavedK2, int procR): savedA1WaitTime(lSavedA1), savedK1WaitTime(lSavedK1), savedK2WaitTime(lSavedK2), processedRequests(procR) {
+	OutputSimState(int lSavedA1,int lSavedK1, int lSavedK2,int procK1, int procK2, int procR): savedA1WaitTime(lSavedA1), savedK1WaitTime(lSavedK1), savedK2WaitTime(lSavedK2),processingK1(procK1),processingK2(procK2), processedRequests(procR) {
 
 	}
 

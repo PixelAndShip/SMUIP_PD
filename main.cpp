@@ -11,50 +11,50 @@ Output OP;
 
 
 
-void generateWaitTime(OutputSimState* nextIteration, int type) {
+void generateWaitTime(OutputSimState* nextIteration, int type,int currentID) {
 	GSTable.currentNumberId += 1;
 	nextIteration->usedGS += std::to_string(GSTable.currentNumberId)+" ";
 	if ((GSTable.currentNumberId - 1) < GSTable.randomNumbers.size()) {
 		switch (type) {
 		case 1:
 			if (GSTable.randomNumbers[GSTable.currentNumberId - 1] <= 1.00) {
-				nextIteration->generatedA1WaitTime = GSTable.currentNumberId+ 4;
+				nextIteration->generatedA1WaitTime = currentID+ 4;
 			}
 			if (GSTable.randomNumbers[GSTable.currentNumberId - 1] <= 0.66) {
-				nextIteration->generatedA1WaitTime = GSTable.currentNumberId + 3;
+				nextIteration->generatedA1WaitTime = currentID + 3;
 			}
 			if (GSTable.randomNumbers[GSTable.currentNumberId - 1] <= 0.33) {
-				nextIteration->generatedA1WaitTime = GSTable.currentNumberId + 2;
+				nextIteration->generatedA1WaitTime = currentID + 2;
 			}
 			nextIteration->savedA1WaitTime = nextIteration->generatedA1WaitTime;
 			break;
 		case 2:
 			if (GSTable.randomNumbers[GSTable.currentNumberId - 1] <= 1.00) {
-				nextIteration->generatedK1WaitTime = GSTable.currentNumberId + 4;
+				nextIteration->generatedK1WaitTime = currentID + 4;
 			}
 			if (GSTable.randomNumbers[GSTable.currentNumberId - 1] <= 0.66) {
-				nextIteration->generatedK1WaitTime = GSTable.currentNumberId + 3;
+				nextIteration->generatedK1WaitTime = currentID + 3;
 			}
 			if (GSTable.randomNumbers[GSTable.currentNumberId - 1] <= 0.33) {
-				nextIteration->generatedK1WaitTime = GSTable.currentNumberId + 2;
+				nextIteration->generatedK1WaitTime = currentID + 2;
 			}
 			nextIteration->savedK1WaitTime = nextIteration->generatedK1WaitTime;
 			break;
 		case 3:
 			if (GSTable.randomNumbers[GSTable.currentNumberId - 1] <= 1.0) {
-				nextIteration->generatedK2WaitTime = GSTable.currentNumberId + 8;
+				nextIteration->generatedK2WaitTime = currentID + 8;
 			}
 			if (GSTable.randomNumbers[GSTable.currentNumberId - 1] <= 0.8) {
-				nextIteration->generatedK2WaitTime = GSTable.currentNumberId + 7;
+				nextIteration->generatedK2WaitTime = currentID + 7;
 			}
 			if (GSTable.randomNumbers[GSTable.currentNumberId - 1] <= 0.6) {
-				nextIteration->generatedK2WaitTime = GSTable.currentNumberId + 6;
+				nextIteration->generatedK2WaitTime = currentID + 6;
 			}
 			if (GSTable.randomNumbers[GSTable.currentNumberId - 1] <= 0.4) {
-				nextIteration->generatedK2WaitTime = GSTable.currentNumberId + 5;
+				nextIteration->generatedK2WaitTime = currentID + 5;
 			}
 			if (GSTable.randomNumbers[GSTable.currentNumberId - 1] <= 0.2) {
-				nextIteration->generatedK2WaitTime = GSTable.currentNumberId + 4;
+				nextIteration->generatedK2WaitTime = currentID + 4;
 			}
 			nextIteration->savedK2WaitTime = nextIteration->generatedK2WaitTime;
 			break;
@@ -93,7 +93,7 @@ void manageNextIteration(OutputSimState* lastIteration, OutputSimState* nextIter
 		if (lastIteration->R1 != 0) {
 			nextIteration->R1 -= 1;
 			nextIteration->K2 = 1;
-			generateWaitTime(nextIteration, 3);
+			generateWaitTime(nextIteration, 3, sNIID);
 			nextIteration->savedK2WaitTime = nextIteration->generatedK2WaitTime;
 			nextIteration->processingK2 = true;
 			return;
@@ -114,14 +114,16 @@ void manageNextIteration(OutputSimState* lastIteration, OutputSimState* nextIter
 		nextIteration->savedK1WaitTime = 0;
 		if (nextIteration->processingK2 == false) {
 			nextIteration->processingK2 = true;
-			generateWaitTime(nextIteration, 3);
+			generateWaitTime(nextIteration, 3,sNIID);
 			nextIteration->savedK2WaitTime = nextIteration->generatedK2WaitTime;
 			nextIteration->K2 = 1;
-			return;
+			
 		}
 		else {
 			nextIteration->R1 += 1;
+			
 		}
+		return;
 	}
 
 	if (lastIteration->savedA1WaitTime != sNIID) {
@@ -132,11 +134,11 @@ void manageNextIteration(OutputSimState* lastIteration, OutputSimState* nextIter
 		if (nextIteration->processingK1 == false) {
 			nextIteration->processingK1 = true;
 			nextIteration->K1 = 1;
-			generateWaitTime(nextIteration, 2);
+			generateWaitTime(nextIteration, 2,sNIID);
 			nextIteration->savedK1WaitTime = nextIteration->generatedK1WaitTime;
 			
 		}
-		generateWaitTime(nextIteration, 1);
+		generateWaitTime(nextIteration, 1,sNIID);
 		nextIteration->savedA1WaitTime = nextIteration->generatedA1WaitTime;
 		return;
 	}
@@ -163,7 +165,7 @@ int getNextIterationNumber(OutputSimState* lastIteration) {
 }
 OutputSimState* generateIteration(OutputSimState* lastIteration) {
 
-	OutputSimState* newIteration = new OutputSimState(lastIteration->savedA1WaitTime,lastIteration->savedK1WaitTime,lastIteration->savedK2WaitTime,lastIteration->processedRequests);
+	OutputSimState* newIteration = new OutputSimState(lastIteration->savedA1WaitTime,lastIteration->savedK1WaitTime,lastIteration->savedK2WaitTime,lastIteration->processingK1,lastIteration->processingK2,lastIteration->processedRequests);
 	int smallestNextIterationID = getNextIterationNumber(lastIteration);
 	newIteration->currentTime = smallestNextIterationID;
 	manageNextIteration(lastIteration, newIteration, smallestNextIterationID);
@@ -177,6 +179,7 @@ void manageSim() {
 	GSTable.currentNumberId += 1;
 	firstIteration->usedGS = "1";
 	OP.printOutputSimState(*firstIteration, GSTable);
+	OSS->SS.push_back(firstIteration);
 	OutputSimState* newIteration = generateIteration(firstIteration);
 	
 	OP.printOutputSimState(*newIteration,GSTable);
