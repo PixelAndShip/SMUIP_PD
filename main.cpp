@@ -187,6 +187,7 @@ void manageSim() {
 		OSS->SS.push_back(newIteration);
 		OP.printOutputSimState(*newIteration,GSTable);
 	}
+	OP.printToExcelCSV(OSS->SS, "U_4_61.csv");
 }
 
 

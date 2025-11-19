@@ -2,6 +2,7 @@
 #include "OutputSimStates.h"
 #include "GST.h"
 #include <iostream>
+#include <fstream>
 class Output {
 public:
 
@@ -43,6 +44,35 @@ public:
         std::cout << "R1: " << state.R1 << std::endl;
         std::cout << "processedRequests: " << state.processedRequests << std::endl;
         std::cout << std::endl;
+    };
+
+    void printToExcelCSV(const std::vector<OutputSimState*>& states, const std::string& filename) {
+        std::ofstream file(filename);
+        if (!file.is_open()) {
+            std::cerr << "Error opening file for writing: " << filename << std::endl;
+            return;
+        }
+
+        // Write CSV header (excluding saved* columns)
+        file << "currentTime,usedGS,generatedA1WaitTime,generatedK1WaitTime,K1,processingK1,generatedK2WaitTime,K2,processingK2,R1,processedRequests\n";
+
+        // Write each state's data except saved ones
+        for (const auto& state : states) {
+            file << state->currentTime << ",";
+            // Quote usedGS because it contains spaces
+            file << "\"" << state->usedGS << "\",";
+            file << state->generatedA1WaitTime << ",";
+            file << state->generatedK1WaitTime << ",";
+            file << state->K1 << ",";
+            file << (state->processingK1 ? "true" : "false") << ",";
+            file << state->generatedK2WaitTime << ",";
+            file << state->K2 << ",";
+            file << (state->processingK2 ? "true" : "false") << ",";
+            file << state->R1 << ",";
+            file << state->processedRequests << "\n";
+        }
+        file.close();
+        std::cout << "Excel CSV output saved to: " << filename << std::endl;
     };
 
 };
