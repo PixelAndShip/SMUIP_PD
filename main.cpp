@@ -70,6 +70,7 @@ void generateWaitTime(OutputSimState* nextIteration, int type,int currentID) {
 
 
 void manageNextIteration(OutputSimState* lastIteration, OutputSimState* nextIteration,int sNIID){ 
+	nextIteration->R1 = lastIteration->R1;
 	if (lastIteration->savedK2WaitTime != sNIID) {
 		nextIteration->savedK2WaitTime = lastIteration->savedK2WaitTime;
 		if (lastIteration->processingK2 == true) {
@@ -77,17 +78,22 @@ void manageNextIteration(OutputSimState* lastIteration, OutputSimState* nextIter
 		}
 		
 	}
+	
 	else if (lastIteration->savedK2WaitTime == sNIID) {
+		
+		
+
 		if (lastIteration->processingK2 == true) {
 			nextIteration->processedRequests += 1;
 			nextIteration->processingK2 = false;
 			nextIteration->K2 = 0;
 			nextIteration->savedK2WaitTime = 0;
+			
 			return;
 		}
 	}
 	
-	nextIteration->R1 = lastIteration->R1;
+	
 	if (nextIteration->processingK2 == false) {
 
 		if (lastIteration->R1 != 0) {
@@ -176,6 +182,7 @@ void manageSim() {
 	OutputSimStates* OSS = new OutputSimStates();
 	OutputSimState* firstIteration = new OutputSimState();
 	firstIteration->savedA1WaitTime = 2;
+	firstIteration->generatedA1WaitTime = 2;
 	GSTable.currentNumberId += 1;
 	firstIteration->usedGS = "1";
 	OP.printOutputSimState(*firstIteration, GSTable);
