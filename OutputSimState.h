@@ -1,10 +1,11 @@
 #pragma once
 #include <vector>
+#include <string>
 class OutputSimState {
 public:
 	int currentTime = 0;
 
-	int usedGS = 0;
+	std::string usedGS = "";
 
 	int generatedA1WaitTime = 0;
 	int savedA1WaitTime = 0;

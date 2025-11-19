@@ -13,7 +13,7 @@ Output OP;
 
 void generateWaitTime(OutputSimState* nextIteration, int type) {
 	GSTable.currentNumberId += 1;
-	nextIteration->usedGS = GSTable.currentNumberId;
+	nextIteration->usedGS += std::to_string(GSTable.currentNumberId)+" ";
 	if ((GSTable.currentNumberId - 1) < GSTable.randomNumbers.size()) {
 		switch (type) {
 		case 1:
@@ -174,8 +174,11 @@ void manageSim() {
 	OutputSimStates* OSS = new OutputSimStates();
 	OutputSimState* firstIteration = new OutputSimState();
 	firstIteration->savedA1WaitTime = 2;
+	GSTable.currentNumberId += 1;
+	firstIteration->usedGS = "1";
 	OP.printOutputSimState(*firstIteration, GSTable);
 	OutputSimState* newIteration = generateIteration(firstIteration);
+	
 	OP.printOutputSimState(*newIteration,GSTable);
 	OSS->SS.push_back(newIteration);
 	while (OSS->SS.back()->processedRequests != 4) {
