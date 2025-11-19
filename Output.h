@@ -12,12 +12,11 @@ public:
     };
 
 
-    void printOutputSimState(const OutputSimState& state) {
+    void printOutputSimState(const OutputSimState& state,GST gst) {
         std::cout << "currentTime: " << state.currentTime << std::endl;
 
         std::cout << "usedGS: ";
-        for (const auto& gs : state.usedGS)
-            std::cout << gs << " ";
+        std::cout << state.usedGS;
         std::cout << std::endl;
 
         std::cout << "generatedA1WaitTime: " << state.generatedA1WaitTime << std::endl;
@@ -27,8 +26,7 @@ public:
         std::cout << "savedK1WaitTime: " << state.savedK1WaitTime << std::endl;
 
         std::cout << "K1: ";
-        for (const auto& val : state.K1)
-            std::cout << val << " ";
+        std::cout << state.K1;
         std::cout << std::endl;
 
         std::cout << "processingK1: " << (state.processingK1 ? "true" : "false") << std::endl;
@@ -37,8 +35,7 @@ public:
         std::cout << "savedK2WaitTime: " << state.savedK2WaitTime << std::endl;
 
         std::cout << "K2: ";
-        for (const auto& val : state.K2)
-            std::cout << val << " ";
+        std::cout << state.K2;
         std::cout << std::endl;
 
         std::cout << "processingK2: " << (state.processingK2 ? "true" : "false") << std::endl;
