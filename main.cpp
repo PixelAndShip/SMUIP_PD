@@ -18,43 +18,43 @@ void generateWaitTime(OutputSimState* nextIteration, int type) {
 		switch (type) {
 		case 1:
 			if (GSTable.randomNumbers[GSTable.currentNumberId - 1] <= 1.00) {
-				nextIteration->generatedA1WaitTime = 4;
+				nextIteration->generatedA1WaitTime = GSTable.currentNumberId+ 4;
 			}
 			if (GSTable.randomNumbers[GSTable.currentNumberId - 1] <= 0.66) {
-				nextIteration->generatedA1WaitTime = 3;
+				nextIteration->generatedA1WaitTime = GSTable.currentNumberId + 3;
 			}
 			if (GSTable.randomNumbers[GSTable.currentNumberId - 1] <= 0.33) {
-				nextIteration->generatedA1WaitTime = 2;
+				nextIteration->generatedA1WaitTime = GSTable.currentNumberId + 2;
 			}
 			nextIteration->savedA1WaitTime = nextIteration->generatedA1WaitTime;
 			break;
 		case 2:
 			if (GSTable.randomNumbers[GSTable.currentNumberId - 1] <= 1.00) {
-				nextIteration->generatedK1WaitTime = 4;
+				nextIteration->generatedK1WaitTime = GSTable.currentNumberId + 4;
 			}
 			if (GSTable.randomNumbers[GSTable.currentNumberId - 1] <= 0.66) {
-				nextIteration->generatedK1WaitTime = 3;
+				nextIteration->generatedK1WaitTime = GSTable.currentNumberId + 3;
 			}
 			if (GSTable.randomNumbers[GSTable.currentNumberId - 1] <= 0.33) {
-				nextIteration->generatedK1WaitTime = 2;
+				nextIteration->generatedK1WaitTime = GSTable.currentNumberId + 2;
 			}
 			nextIteration->savedK1WaitTime = nextIteration->generatedK1WaitTime;
 			break;
 		case 3:
 			if (GSTable.randomNumbers[GSTable.currentNumberId - 1] <= 1.0) {
-				nextIteration->generatedK2WaitTime = 8;
+				nextIteration->generatedK2WaitTime = GSTable.currentNumberId + 8;
 			}
 			if (GSTable.randomNumbers[GSTable.currentNumberId - 1] <= 0.8) {
-				nextIteration->generatedK2WaitTime = 7;
+				nextIteration->generatedK2WaitTime = GSTable.currentNumberId + 7;
 			}
 			if (GSTable.randomNumbers[GSTable.currentNumberId - 1] <= 0.6) {
-				nextIteration->generatedK2WaitTime = 6;
+				nextIteration->generatedK2WaitTime = GSTable.currentNumberId + 6;
 			}
 			if (GSTable.randomNumbers[GSTable.currentNumberId - 1] <= 0.4) {
-				nextIteration->generatedK2WaitTime = 5;
+				nextIteration->generatedK2WaitTime = GSTable.currentNumberId + 5;
 			}
 			if (GSTable.randomNumbers[GSTable.currentNumberId - 1] <= 0.2) {
-				nextIteration->generatedK2WaitTime = 4;
+				nextIteration->generatedK2WaitTime = GSTable.currentNumberId + 4;
 			}
 			nextIteration->savedK2WaitTime = nextIteration->generatedK2WaitTime;
 			break;
@@ -126,7 +126,7 @@ void manageNextIteration(OutputSimState* lastIteration, OutputSimState* nextIter
 
 			generateWaitTime(nextIteration, 2);
 			nextIteration->savedK1WaitTime = nextIteration->generatedK1WaitTime;
-			
+			return;
 		}
 		generateWaitTime(nextIteration, 1);
 		nextIteration->savedA1WaitTime = nextIteration->generatedA1WaitTime;
