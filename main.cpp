@@ -161,7 +161,7 @@ void manageNextIteration(OutputSimState* lastIteration, OutputSimState* nextIter
 
 			nextIteration->stringK1 += "c";
 			nextIteration->stringK1WT += "c";
-			nextIteration->stringR1 += std::to_string(nextIteration->R1);
+			nextIteration->stringR1 += std::to_string(nextIteration->R1+1);
 			nextIteration->stringK2 += "1";
 			nextIteration->stringK2WT += std::to_string(nextIteration->generatedK2WaitTime);
 		}
@@ -240,6 +240,12 @@ void manageSim() {
 	OutputSimState* firstIteration = new OutputSimState();
 	firstIteration->savedA1WaitTime = 2;
 	firstIteration->generatedA1WaitTime = 2;
+	firstIteration->stringA1WT += "2";
+	firstIteration->stringK1 += "q";
+	firstIteration->stringR1 += "q";
+	firstIteration->stringK2 += "q";
+	firstIteration->stringK2WT += "q";
+	firstIteration->stringK1WT += "q";
 	GSTable.currentNumberId += 1;
 	firstIteration->usedGS = "1";
 	OP.printOutputSimState(*firstIteration, GSTable);
