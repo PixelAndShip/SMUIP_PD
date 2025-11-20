@@ -90,33 +90,37 @@ void manageNextIteration(OutputSimState* lastIteration, OutputSimState* nextIter
 			nextIteration->K2 = 0;
 			nextIteration->savedK2WaitTime = 0;
 			
-			nextIteration->stringA1 += "_";
+
+			nextIteration->stringA1WT += "_";
+			nextIteration->usedGS += "_";
+			nextIteration->stringA1WT += "_";
 			nextIteration->stringK1 += "_";
+			nextIteration->stringK1WT += "_";
 			nextIteration->stringR1 += "_";
 			nextIteration->stringK2 += "0";
-			
+			nextIteration->stringK2WT += "_";
 
-			
 		}
 	}
 	
 	
 	if (nextIteration->processingK2 == false) {
 
-		if (lastIteration->R1 != 0) {
+		if (nextIteration->R1 != 0) {
 			nextIteration->R1 -= 1;
 			nextIteration->K2 = 1;
 			generateWaitTime(nextIteration, 3, sNIID);
 			nextIteration->savedK2WaitTime = nextIteration->generatedK2WaitTime;
 			nextIteration->processingK2 = true;
 			
-
-
-			nextIteration->stringA1 += "_";
+			nextIteration->stringA1WT += "_";
 			nextIteration->stringK1 += "_";
+			nextIteration->stringK1WT += "_";
+			nextIteration->stringR1 += "_";
 			nextIteration->stringR1 += std::to_string(nextIteration->R1);
 			nextIteration->stringK2 += "1";
-		
+			nextIteration->stringK2WT += std::to_string(nextIteration->generatedK2WaitTime);
+			
 		}
 	}
 	
@@ -134,30 +138,39 @@ void manageNextIteration(OutputSimState* lastIteration, OutputSimState* nextIter
 		nextIteration->processingK1 = false;
 		nextIteration->K1 = 0;
 		nextIteration->savedK1WaitTime = 0;
-		nextIteration->stringK1 += "0";
-		nextIteration->stringK2 += "_";
 
+
+		nextIteration->stringA1WT += "_";
+		nextIteration->stringK1 += "0";
+		nextIteration->stringK1WT += "_";
+		nextIteration->R1 += 1;
+		nextIteration->stringR1 += std::to_string(nextIteration->R1);
+		nextIteration->stringK2 += "_";
+		nextIteration->stringK2WT += "_";
 
 		if (nextIteration->processingK2 == false) {
 			nextIteration->processingK2 = true;
 			generateWaitTime(nextIteration, 3,sNIID);
+			nextIteration->stringK2WT += std::to_string(nextIteration->generatedK2WaitTime);
 			nextIteration->savedK2WaitTime = nextIteration->generatedK2WaitTime;
 			nextIteration->K2 = 1;
-			nextIteration->stringK2 += "1";
-			nextIteration->stringR1 += "_";
-		}
-		else {
-			nextIteration->R1 += 1;
-			nextIteration->stringR1 += std::to_string(nextIteration->R1);
-			nextIteration->stringK2 += "_";
 			
+
+			nextIteration->stringA1WT += "_";
+			nextIteration->stringK1 += "_";
+			nextIteration->stringK1WT += "_";
+			nextIteration->stringR1 += "_";
+			nextIteration->stringR1 += std::to_string(nextIteration->R1);
+			nextIteration->stringK2 += "1";
+			nextIteration->stringK2WT += std::to_string(nextIteration->generatedK2WaitTime);
 		}
+		
 		
 	}
 
 	if (lastIteration->savedA1WaitTime != sNIID) {
 		nextIteration->savedA1WaitTime = lastIteration->savedA1WaitTime;
-		nextIteration->stringA1 += "_";
+		
 	}
 	else if (lastIteration->savedA1WaitTime == sNIID) {
 		nextIteration->savedA1WaitTime = 0;
@@ -166,12 +179,21 @@ void manageNextIteration(OutputSimState* lastIteration, OutputSimState* nextIter
 			nextIteration->K1 = 1;
 			generateWaitTime(nextIteration, 2,sNIID);
 			nextIteration->savedK1WaitTime = nextIteration->generatedK1WaitTime;
-			nextIteration->stringK1 += "1";
 			
+
+			
+			nextIteration->stringK1 += "1";
+			nextIteration->stringK1WT += std::to_string(nextIteration->generatedK1WaitTime);
+			nextIteration->stringR1 += "_";
+			nextIteration->stringR1 += std::to_string(nextIteration->R1);
+			nextIteration->stringK2 += "_";
+			nextIteration->stringK2WT += "_";
+
 		}
 		generateWaitTime(nextIteration, 1,sNIID);
 		nextIteration->savedA1WaitTime = nextIteration->generatedA1WaitTime;
-		
+
+		nextIteration->stringA1WT += std::to_string(nextIteration->generatedA1WaitTime);
 		
 	}
 }

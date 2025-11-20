@@ -53,26 +53,25 @@ public:
             return;
         }
 
-        // Write CSV header (excluding saved* columns)
-        file << "currentTime,usedGS,generatedA1WaitTime,generatedK1WaitTime,K1,processingK1,generatedK2WaitTime,K2,processingK2,R1,processedRequests\n";
+        // Write CSV header with only requested fields
+        file << "currentTime,usedGS,stringA1WT,stringK1,stringK1WT,stringR1,stringK2,stringK2WT,processedRequests\n";
 
-        // Write each state's data except saved ones
+        // Write each state's selected data
         for (const auto& state : states) {
             file << state->currentTime << ",";
-            // Quote usedGS because it contains spaces
+            // Quote strings that may contain spaces
             file << "\"" << state->usedGS << "\",";
-            file << state->generatedA1WaitTime << ",";
-            file << state->generatedK1WaitTime << ",";
-            file << state->K1 << ",";
-            file << (state->processingK1 ? "true" : "false") << ",";
-            file << state->generatedK2WaitTime << ",";
-            file << state->K2 << ",";
-            file << (state->processingK2 ? "true" : "false") << ",";
-            file << state->R1 << ",";
+            file << "\"" << state->stringA1WT << "\",";
+            file << "\"" << state->stringK1 << "\",";
+            file << "\"" << state->stringK1WT << "\",";
+            file << "\"" << state->stringR1 << "\",";
+            file << "\"" << state->stringK2 << "\",";
+            file << "\"" << state->stringK2WT << "\",";
             file << state->processedRequests << "\n";
         }
         file.close();
         std::cout << "Excel CSV output saved to: " << filename << std::endl;
-    };
+    }
+
 
 };
