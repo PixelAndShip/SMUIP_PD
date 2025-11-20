@@ -69,134 +69,102 @@ void generateWaitTime(OutputSimState* nextIteration, int type,int currentID) {
 
 
 
-void manageNextIteration(OutputSimState* lastIteration, OutputSimState* nextIteration,int sNIID){ 
+void manageNextIteration(OutputSimState* lastIteration, OutputSimState* nextIteration, int sNIID) {
 	nextIteration->R1 = lastIteration->R1;
-	if (lastIteration->savedK2WaitTime != sNIID) {
-		nextIteration->savedK2WaitTime = lastIteration->savedK2WaitTime;
-		if (lastIteration->processingK2 == true) {
-			nextIteration->processingK2 = true;
-		}
-		
-		
-	}
-	
-	else if (lastIteration->savedK2WaitTime == sNIID) {
-		
-		
 
-		if (lastIteration->processingK2 == true) {
-			nextIteration->processedRequests += 1;
-			nextIteration->processingK2 = false;
-			nextIteration->K2 = 0;
-			nextIteration->savedK2WaitTime = 0;
-			
-
-			nextIteration->stringA1WT += "_";
-			nextIteration->usedGS += "_";
-			nextIteration->stringA1WT += "_";
-			nextIteration->stringK1 += "_";
-			nextIteration->stringK1WT += "_";
-			nextIteration->stringR1 += "_";
-			nextIteration->stringK2 += "0";
-			nextIteration->stringK2WT += "_";
-
-		}
-	}
-	
-	
-	if (nextIteration->processingK2 == false) {
-
-		if (nextIteration->R1 != 0) {
-			nextIteration->R1 -= 1;
-			nextIteration->K2 = 1;
-			generateWaitTime(nextIteration, 3, sNIID);
-			nextIteration->savedK2WaitTime = nextIteration->generatedK2WaitTime;
-			nextIteration->processingK2 = true;
-			
-			nextIteration->stringA1WT += "_";
-			nextIteration->stringK1 += "_";
-			nextIteration->stringK1WT += "_";
-			nextIteration->stringR1 += "_";
-			nextIteration->stringR1 += std::to_string(nextIteration->R1);
-			nextIteration->stringK2 += "1";
-			nextIteration->stringK2WT += std::to_string(nextIteration->generatedK2WaitTime);
-			
-		}
-	}
-	
-	if (lastIteration->savedK1WaitTime != sNIID) {
-		nextIteration->savedK1WaitTime = lastIteration->savedK1WaitTime;
-		if (lastIteration->processingK1 == true) {
-			nextIteration->processingK1 = true;
-
-		}
-		
-		
-
-	}
-	else if (lastIteration->savedK1WaitTime==sNIID) {
-		nextIteration->processingK1 = false;
-		nextIteration->K1 = 0;
-		nextIteration->savedK1WaitTime = 0;
-
-
+	// 1. Empty K2
+	if (lastIteration->savedK2WaitTime == sNIID && lastIteration->processingK2) {
+		nextIteration->processedRequests += 1;
+		nextIteration->processingK2 = false;
+		nextIteration->K2 = 0;
+		nextIteration->savedK2WaitTime = 0;
+		// update log strings...
+		nextIteration->stringK2 += "0";
+		nextIteration->stringK2WT += "_";
 		nextIteration->stringA1WT += "_";
+		nextIteration->stringK1 += "_";
+		nextIteration->stringK1WT += "_";
+		nextIteration->stringR1 += "_";
+		nextIteration->usedGS += "_";
+	}
+	else {
+		// If K2 not emptied, carry over states
+		nextIteration->savedK2WaitTime = lastIteration->savedK2WaitTime;
+		if (lastIteration->processingK2)
+			nextIteration->processingK2 = true;
+	}
+
+	// 2. If K2 free after empty, move request from R1 if any
+	if (!nextIteration->processingK2 && nextIteration->R1 > 0) {
+		nextIteration->R1 -= 1;
+		nextIteration->K2 = 1;
+		generateWaitTime(nextIteration, 3, sNIID);
+		nextIteration->savedK2WaitTime = nextIteration->generatedK2WaitTime;
+		nextIteration->processingK2 = true;
+		nextIteration->stringK2 += "1";
+		nextIteration->stringK2WT += std::to_string(nextIteration->generatedK2WaitTime);
+		nextIteration->stringA1WT += "_";
+		nextIteration->stringK1 += "_";
+		nextIteration->stringK1WT += "_";
+		nextIteration->stringR1 += std::to_string(nextIteration->R1);
+	}
+
+	// 3. Empty K1 and process possible move to K2/queue, generate K2 waittime if transferred to K2
+	if (lastIteration->savedK1WaitTime == sNIID) {
+		nextIteration->K1 = 0;
+		nextIteration->processingK1 = false;
+		nextIteration->savedK1WaitTime = 0;
 		nextIteration->stringK1 += "0";
 		nextIteration->stringK1WT += "_";
 		nextIteration->R1 += 1;
 		nextIteration->stringR1 += std::to_string(nextIteration->R1);
 		nextIteration->stringK2 += "_";
 		nextIteration->stringK2WT += "_";
-
-		if (nextIteration->processingK2 == false) {
+		// Try to move to K2 if K2 now empty and not already processed this iteration
+		if (!nextIteration->processingK2 && nextIteration->R1 > 0) {
 			nextIteration->processingK2 = true;
-			generateWaitTime(nextIteration, 3,sNIID);
-			nextIteration->stringK2WT += std::to_string(nextIteration->generatedK2WaitTime);
-			nextIteration->savedK2WaitTime = nextIteration->generatedK2WaitTime;
 			nextIteration->K2 = 1;
-			
-
+			generateWaitTime(nextIteration, 3, sNIID);
+			nextIteration->savedK2WaitTime = nextIteration->generatedK2WaitTime;
+			nextIteration->stringK2 += "1";
+			nextIteration->stringK2WT += std::to_string(nextIteration->generatedK2WaitTime);
+			nextIteration->stringR1 += "_";
+			nextIteration->stringR1 += std::to_string(nextIteration->R1);
 			nextIteration->stringA1WT += "_";
 			nextIteration->stringK1 += "_";
 			nextIteration->stringK1WT += "_";
-			nextIteration->stringR1 += "_";
-			nextIteration->stringR1 += std::to_string(nextIteration->R1);
-			nextIteration->stringK2 += "1";
-			nextIteration->stringK2WT += std::to_string(nextIteration->generatedK2WaitTime);
 		}
-		
-		
+	}
+	else if (lastIteration->savedK1WaitTime != sNIID) {
+		nextIteration->savedK1WaitTime = lastIteration->savedK1WaitTime;
+		if (lastIteration->processingK1)
+			nextIteration->processingK1 = true;
 	}
 
-	if (lastIteration->savedA1WaitTime != sNIID) {
-		nextIteration->savedA1WaitTime = lastIteration->savedA1WaitTime;
-		
-	}
-	else if (lastIteration->savedA1WaitTime == sNIID) {
+	// 4. Handle A1 to K1 only if K1 empty
+	if (lastIteration->savedA1WaitTime == sNIID) {
 		nextIteration->savedA1WaitTime = 0;
-		if (nextIteration->processingK1 == false) {
+		if (!nextIteration->processingK1) {
 			nextIteration->processingK1 = true;
 			nextIteration->K1 = 1;
-			generateWaitTime(nextIteration, 2,sNIID);
+			generateWaitTime(nextIteration, 2, sNIID);
 			nextIteration->savedK1WaitTime = nextIteration->generatedK1WaitTime;
-			
-
-			
 			nextIteration->stringK1 += "1";
 			nextIteration->stringK1WT += std::to_string(nextIteration->generatedK1WaitTime);
 			nextIteration->stringR1 += "_";
 			nextIteration->stringR1 += std::to_string(nextIteration->R1);
 			nextIteration->stringK2 += "_";
 			nextIteration->stringK2WT += "_";
-
 		}
-		generateWaitTime(nextIteration, 1,sNIID);
+		generateWaitTime(nextIteration, 1, sNIID);
 		nextIteration->savedA1WaitTime = nextIteration->generatedA1WaitTime;
-
 		nextIteration->stringA1WT += std::to_string(nextIteration->generatedA1WaitTime);
-		
+	}
+	else if (lastIteration->savedA1WaitTime != sNIID) {
+		nextIteration->savedA1WaitTime = lastIteration->savedA1WaitTime;
 	}
 }
+
 
 
 
