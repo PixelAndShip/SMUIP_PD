@@ -10,18 +10,21 @@ public:
 	int generatedA1WaitTime = 0;
 	int savedA1WaitTime = 0;
 	std::string stringA1 = "";
+	std::string stringA1WT = "";
 
 	int generatedK1WaitTime = 0;
 	int savedK1WaitTime = 0;
 	int K1 = -1;
 	bool processingK1= false;
 	std::string stringK1 = "";
+	std::string stringK1WT = "";
 
 	int generatedK2WaitTime = 0;
 	int savedK2WaitTime = 0;
 	int K2 = -1;
 	bool processingK2 = false;
 	std::string stringK2 = "";
+	std::string stringK2WT = "";
 
 	int R1 = 0;
 	std::string stringR1 = "";

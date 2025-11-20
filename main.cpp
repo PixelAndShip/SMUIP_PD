@@ -76,7 +76,7 @@ void manageNextIteration(OutputSimState* lastIteration, OutputSimState* nextIter
 		if (lastIteration->processingK2 == true) {
 			nextIteration->processingK2 = true;
 		}
-		nextIteration->stringK2 += "_";
+		
 		
 	}
 	
@@ -90,12 +90,13 @@ void manageNextIteration(OutputSimState* lastIteration, OutputSimState* nextIter
 			nextIteration->K2 = 0;
 			nextIteration->savedK2WaitTime = 0;
 			
+			nextIteration->stringA1 += "_";
+			nextIteration->stringK1 += "_";
+			nextIteration->stringR1 += "_";
 			nextIteration->stringK2 += "0";
 			
 
-			if (nextIteration->R1 != 0) {
-				nextIteration->stringR1 += "_";
-			}
+			
 		}
 	}
 	
@@ -109,8 +110,13 @@ void manageNextIteration(OutputSimState* lastIteration, OutputSimState* nextIter
 			nextIteration->savedK2WaitTime = nextIteration->generatedK2WaitTime;
 			nextIteration->processingK2 = true;
 			
-			nextIteration->stringK2 += "1";
+
+
+			nextIteration->stringA1 += "_";
+			nextIteration->stringK1 += "_";
 			nextIteration->stringR1 += std::to_string(nextIteration->R1);
+			nextIteration->stringK2 += "1";
+		
 		}
 	}
 	
@@ -120,7 +126,7 @@ void manageNextIteration(OutputSimState* lastIteration, OutputSimState* nextIter
 			nextIteration->processingK1 = true;
 
 		}
-		nextIteration->stringK1 += "_";
+		
 		
 
 	}
@@ -129,16 +135,21 @@ void manageNextIteration(OutputSimState* lastIteration, OutputSimState* nextIter
 		nextIteration->K1 = 0;
 		nextIteration->savedK1WaitTime = 0;
 		nextIteration->stringK1 += "0";
+		nextIteration->stringK2 += "_";
+
+
 		if (nextIteration->processingK2 == false) {
 			nextIteration->processingK2 = true;
 			generateWaitTime(nextIteration, 3,sNIID);
 			nextIteration->savedK2WaitTime = nextIteration->generatedK2WaitTime;
 			nextIteration->K2 = 1;
 			nextIteration->stringK2 += "1";
+			nextIteration->stringR1 += "_";
 		}
 		else {
 			nextIteration->R1 += 1;
 			nextIteration->stringR1 += std::to_string(nextIteration->R1);
+			nextIteration->stringK2 += "_";
 			
 		}
 		
@@ -156,6 +167,7 @@ void manageNextIteration(OutputSimState* lastIteration, OutputSimState* nextIter
 			generateWaitTime(nextIteration, 2,sNIID);
 			nextIteration->savedK1WaitTime = nextIteration->generatedK1WaitTime;
 			nextIteration->stringK1 += "1";
+			
 		}
 		generateWaitTime(nextIteration, 1,sNIID);
 		nextIteration->savedA1WaitTime = nextIteration->generatedA1WaitTime;
