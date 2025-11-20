@@ -13,7 +13,7 @@ Output OP;
 
 void generateWaitTime(OutputSimState* nextIteration, int type,int currentID) {
 	GSTable.currentNumberId += 1;
-	nextIteration->usedGS += std::to_string(GSTable.currentNumberId)+" ";
+	nextIteration->usedGS += std::to_string(GSTable.currentNumberId) + " ";
 	if ((GSTable.currentNumberId - 1) < GSTable.randomNumbers.size()) {
 		switch (type) {
 		case 1:
@@ -91,14 +91,14 @@ void manageNextIteration(OutputSimState* lastIteration, OutputSimState* nextIter
 			nextIteration->savedK2WaitTime = 0;
 			
 
-			nextIteration->stringA1WT += "_";
-			nextIteration->usedGS += "_";
-			nextIteration->stringA1WT += "_";
-			nextIteration->stringK1 += "_";
-			nextIteration->stringK1WT += "_";
-			nextIteration->stringR1 += "_";
+			
+			nextIteration->usedGS += "n";
+			nextIteration->stringA1WT += "n";
+			nextIteration->stringK1 += "n";
+			nextIteration->stringK1WT += "n";
+			nextIteration->stringR1 += "n";
 			nextIteration->stringK2 += "0";
-			nextIteration->stringK2WT += "_";
+			nextIteration->stringK2WT += "n";
 
 		}
 	}
@@ -113,10 +113,11 @@ void manageNextIteration(OutputSimState* lastIteration, OutputSimState* nextIter
 			nextIteration->savedK2WaitTime = nextIteration->generatedK2WaitTime;
 			nextIteration->processingK2 = true;
 			
-			nextIteration->stringA1WT += "_";
-			nextIteration->stringK1 += "_";
-			nextIteration->stringK1WT += "_";
-			nextIteration->stringR1 += "_";
+
+			nextIteration->stringA1WT += "b";
+			
+			nextIteration->stringK1 += "b";
+			nextIteration->stringK1WT += "b";
 			nextIteration->stringR1 += std::to_string(nextIteration->R1);
 			nextIteration->stringK2 += "1";
 			nextIteration->stringK2WT += std::to_string(nextIteration->generatedK2WaitTime);
@@ -140,29 +141,33 @@ void manageNextIteration(OutputSimState* lastIteration, OutputSimState* nextIter
 		nextIteration->savedK1WaitTime = 0;
 
 
-		nextIteration->stringA1WT += "_";
+		nextIteration->stringA1WT += "a";
+		nextIteration->usedGS += "a";
 		nextIteration->stringK1 += "0";
-		nextIteration->stringK1WT += "_";
-		nextIteration->R1 += 1;
-		nextIteration->stringR1 += std::to_string(nextIteration->R1);
-		nextIteration->stringK2 += "_";
-		nextIteration->stringK2WT += "_";
+		nextIteration->stringK1WT += "a";
+		nextIteration->stringR1 += "a";
+		nextIteration->stringK2 += "a";
+		nextIteration->stringK2WT += "a";
 
 		if (nextIteration->processingK2 == false) {
 			nextIteration->processingK2 = true;
 			generateWaitTime(nextIteration, 3,sNIID);
-			nextIteration->stringK2WT += std::to_string(nextIteration->generatedK2WaitTime);
+			
 			nextIteration->savedK2WaitTime = nextIteration->generatedK2WaitTime;
 			nextIteration->K2 = 1;
 			
 
-			nextIteration->stringA1WT += "_";
-			nextIteration->stringK1 += "_";
-			nextIteration->stringK1WT += "_";
-			nextIteration->stringR1 += "_";
+			nextIteration->stringA1WT += "c";
+
+			nextIteration->stringK1 += "c";
+			nextIteration->stringK1WT += "c";
 			nextIteration->stringR1 += std::to_string(nextIteration->R1);
 			nextIteration->stringK2 += "1";
 			nextIteration->stringK2WT += std::to_string(nextIteration->generatedK2WaitTime);
+		}
+		else {
+			nextIteration->R1 += 1;
+			nextIteration->stringR1 =std::to_string(nextIteration->R1) ;
 		}
 		
 		
@@ -179,21 +184,25 @@ void manageNextIteration(OutputSimState* lastIteration, OutputSimState* nextIter
 			nextIteration->K1 = 1;
 			generateWaitTime(nextIteration, 2,sNIID);
 			nextIteration->savedK1WaitTime = nextIteration->generatedK1WaitTime;
-			
 
-			
 			nextIteration->stringK1 += "1";
 			nextIteration->stringK1WT += std::to_string(nextIteration->generatedK1WaitTime);
-			nextIteration->stringR1 += "_";
-			nextIteration->stringR1 += std::to_string(nextIteration->R1);
-			nextIteration->stringK2 += "_";
-			nextIteration->stringK2WT += "_";
 
+			
+
+		}
+		else {
+			nextIteration->stringK1 += "f";
+			nextIteration->stringK1WT += "f";
 		}
 		generateWaitTime(nextIteration, 1,sNIID);
 		nextIteration->savedA1WaitTime = nextIteration->generatedA1WaitTime;
 
 		nextIteration->stringA1WT += std::to_string(nextIteration->generatedA1WaitTime);
+		
+		nextIteration->stringR1 += "f";
+		nextIteration->stringK2 += "f";
+		nextIteration->stringK2WT += "f";
 		
 	}
 }
