@@ -9,18 +9,22 @@ public:
 
 	int generatedA1WaitTime = 0;
 	int savedA1WaitTime = 0;
+	std::string stringA1 = "";
 
 	int generatedK1WaitTime = 0;
 	int savedK1WaitTime = 0;
 	int K1 = -1;
 	bool processingK1= false;
+	std::string stringK1 = "";
 
 	int generatedK2WaitTime = 0;
 	int savedK2WaitTime = 0;
 	int K2 = -1;
 	bool processingK2 = false;
+	std::string stringK2 = "";
 
 	int R1 = 0;
+	std::string stringR1 = "";
 
 	int processedRequests = 0;
 	OutputSimState() {
