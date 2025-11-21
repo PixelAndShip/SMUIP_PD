@@ -28,6 +28,7 @@ public:
 	}
 
 	void Simulate_U_4_61() {
+		OP.launchPrint();
 		while (OSS.SS.back()->processedRequests != 4) {
 
 			newIteration = generateIteration(newIteration);
