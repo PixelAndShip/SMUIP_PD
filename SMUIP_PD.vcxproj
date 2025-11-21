@@ -123,10 +123,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="A1.h" />
     <ClInclude Include="GST.h" />
+    <ClInclude Include="K1.h" />
+    <ClInclude Include="ManageSimStates.h" />
     <ClInclude Include="Output.h" />
-    <ClInclude Include="OutputSimState.h" />
-    <ClInclude Include="OutputSimStates.h" />
+    <ClInclude Include="R1.h" />
+    <ClInclude Include="SimState.h" />
+    <ClInclude Include="SimStates.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />

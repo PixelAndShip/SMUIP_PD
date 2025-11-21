@@ -21,13 +21,25 @@
     <ClInclude Include="GST.h">
       <Filter>Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="OutputSimState.h">
+    <ClInclude Include="SimState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="OutputSimStates.h">
+    <ClInclude Include="SimStates.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Output.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="A1.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="K1.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="R1.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ManageSimStates.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
