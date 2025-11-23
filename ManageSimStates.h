@@ -15,9 +15,9 @@ public:
 		firstIteration->a1.generatedA1WaitTime = 2;
 		firstIteration->a1.stringA1WT += "2";
 		firstIteration->k1.stringK1 += "q";
-		firstIteration->r1.stringR1 += "q";
-		firstIteration->stringK2 += "q";
-		firstIteration->stringK2WT += "q";
+		firstIteration->r1.stringR1 += "0";
+		firstIteration->k2.stringK2 += "q";
+		firstIteration->k2.stringK2WT += "q";
 		firstIteration->k1.stringK1WT += "q";
 		GSTable.currentNumberId += 1;
 		firstIteration->usedGS = "1";
@@ -29,6 +29,7 @@ public:
 
 	void Simulate_U_4_61() {
 		OP.launchPrint();
+		//OSS.SS.back()->processedRequests != 4
 		while (OSS.SS.back()->processedRequests != 4) {
 
 			newIteration = generateIteration(newIteration);
@@ -44,48 +45,49 @@ public:
 		GSTable.currentNumberId += 1;
 		nextIteration->usedGS += std::to_string(GSTable.currentNumberId) + " ";
 		if ((GSTable.currentNumberId - 1) < GSTable.randomNumbers.size()) {
+			float randomNumber = GSTable.randomNumbers[GSTable.currentNumberId - 1];
 			switch (type) {
 			case 1:
-				if (GSTable.randomNumbers[GSTable.currentNumberId - 1] <= 1.00) {
+				if (randomNumber <= 1.00) {
 					nextIteration->a1.generatedA1WaitTime = currentID + 4;
 				}
-				if (GSTable.randomNumbers[GSTable.currentNumberId - 1] <= 0.66) {
+				if (randomNumber <= 0.66) {
 					nextIteration->a1.generatedA1WaitTime = currentID + 3;
 				}
-				if (GSTable.randomNumbers[GSTable.currentNumberId - 1] <= 0.33) {
+				if (randomNumber <= 0.33) {
 					nextIteration->a1.generatedA1WaitTime = currentID + 2;
 				}
 				nextIteration->a1.savedA1WaitTime = nextIteration->a1.generatedA1WaitTime;
 				break;
 			case 2:
-				if (GSTable.randomNumbers[GSTable.currentNumberId - 1] <= 1.00) {
+				if (randomNumber <= 1.00) {
 					nextIteration->k1.generatedK1WaitTime = currentID + 4;
 				}
-				if (GSTable.randomNumbers[GSTable.currentNumberId - 1] <= 0.66) {
+				if (randomNumber <= 0.66) {
 					nextIteration->k1.generatedK1WaitTime = currentID + 3;
 				}
-				if (GSTable.randomNumbers[GSTable.currentNumberId - 1] <= 0.33) {
+				if (randomNumber <= 0.33) {
 					nextIteration->k1.generatedK1WaitTime = currentID + 2;
 				}
 				nextIteration->k1.savedK1WaitTime = nextIteration->k1.generatedK1WaitTime;
 				break;
 			case 3:
-				if (GSTable.randomNumbers[GSTable.currentNumberId - 1] <= 1.0) {
-					nextIteration->generatedK2WaitTime = currentID + 8;
+				if (randomNumber <= 1.0) {
+					nextIteration->k2.generatedK2WaitTime = currentID + 8;
 				}
-				if (GSTable.randomNumbers[GSTable.currentNumberId - 1] <= 0.8) {
-					nextIteration->generatedK2WaitTime = currentID + 7;
+				if (randomNumber <= 0.8) {
+					nextIteration->k2.generatedK2WaitTime = currentID + 7;
 				}
-				if (GSTable.randomNumbers[GSTable.currentNumberId - 1] <= 0.6) {
-					nextIteration->generatedK2WaitTime = currentID + 6;
+				if (randomNumber <= 0.6) {
+					nextIteration->k2.generatedK2WaitTime = currentID + 6;
 				}
-				if (GSTable.randomNumbers[GSTable.currentNumberId - 1] <= 0.4) {
-					nextIteration->generatedK2WaitTime = currentID + 5;
+				if (randomNumber <= 0.4) {
+					nextIteration->k2.generatedK2WaitTime = currentID + 5;
 				}
-				if (GSTable.randomNumbers[GSTable.currentNumberId - 1] <= 0.2) {
-					nextIteration->generatedK2WaitTime = currentID + 4;
+				if (randomNumber <= 0.2) {
+					nextIteration->k2.generatedK2WaitTime = currentID + 4;
 				}
-				nextIteration->savedK2WaitTime = nextIteration->generatedK2WaitTime;
+				nextIteration->k2.savedK2WaitTime = nextIteration->k2.generatedK2WaitTime;
 				break;
 			}
 
@@ -95,7 +97,7 @@ public:
 
 	}
 	int getNextIterationNumber(SimState* lastIteration) {
-		int nums[] = { lastIteration->a1.savedA1WaitTime,lastIteration->k1.savedK1WaitTime,lastIteration->savedK2WaitTime };
+		int nums[] = { lastIteration->a1.savedA1WaitTime,lastIteration->k1.savedK1WaitTime,lastIteration->k2.savedK2WaitTime };
 
 		int n = sizeof(nums) / sizeof(nums[0]);
 
@@ -111,7 +113,7 @@ public:
 	}
 	SimState* generateIteration(SimState* lastIteration) {
 
-		SimState* newIteration = new SimState(lastIteration->a1.savedA1WaitTime, lastIteration->k1.savedK1WaitTime, lastIteration->savedK2WaitTime, lastIteration->k1.processingK1, lastIteration->processingK2, lastIteration->processedRequests);
+		SimState* newIteration = new SimState(lastIteration->a1.savedA1WaitTime, lastIteration->k1.savedK1WaitTime, lastIteration->k2.savedK2WaitTime, lastIteration->k1.processingK1, lastIteration->k2.processingK2, lastIteration->processedRequests);
 		int smallestNextIterationID = getNextIterationNumber(lastIteration);
 		newIteration->currentTime = smallestNextIterationID;
 		manageNextIteration(lastIteration, newIteration, smallestNextIterationID);
@@ -119,24 +121,24 @@ public:
 	}
 	void manageNextIteration(SimState* lastIteration, SimState* nextIteration, int sNIID) {
 		nextIteration->r1.stR1 = lastIteration->r1.stR1;
-		if (lastIteration->savedK2WaitTime != sNIID) {
-			nextIteration->savedK2WaitTime = lastIteration->savedK2WaitTime;
-			if (lastIteration->processingK2 == true) {
-				nextIteration->processingK2 = true;
+		if (lastIteration->k2.savedK2WaitTime != sNIID) {
+			nextIteration->k2.savedK2WaitTime = lastIteration->k2.savedK2WaitTime;
+			if (lastIteration->k2.processingK2 == true) {
+				nextIteration->k2.processingK2 = true;
 			}
 
 
 		}
 
-		else if (lastIteration->savedK2WaitTime == sNIID) {
+		else if (lastIteration->k2.savedK2WaitTime == sNIID) {
 
 
 
-			if (lastIteration->processingK2 == true) {
+			if (lastIteration->k2.processingK2 == true) {
 				nextIteration->processedRequests += 1;
-				nextIteration->processingK2 = false;
-				nextIteration->K2 = 0;
-				nextIteration->savedK2WaitTime = 0;
+				nextIteration->k2.processingK2 = false;
+				
+				nextIteration->k2.savedK2WaitTime = 0;
 
 
 
@@ -144,22 +146,22 @@ public:
 				nextIteration->a1.stringA1WT += "n";
 				nextIteration->k1.stringK1 += "n";
 				nextIteration->k1.stringK1WT += "n";
-				nextIteration->r1.stringR1 += "n";
-				nextIteration->stringK2 += "0";
-				nextIteration->stringK2WT += "n";
+				nextIteration->r1.stringR1 += std::to_string(nextIteration->r1.stR1);
+				nextIteration->k2.stringK2 += "0";
+				nextIteration->k2.stringK2WT += "n";
 
 			}
 		}
 
 
-		if (nextIteration->processingK2 == false) {
+		if (nextIteration->k2.processingK2 == false) {
 
 			if (nextIteration->r1.stR1 != 0) {
 				nextIteration->r1.stR1 -= 1;
-				nextIteration->K2 = 1;
+				
 				generateWaitTime(nextIteration, 3, sNIID);
-				nextIteration->savedK2WaitTime = nextIteration->generatedK2WaitTime;
-				nextIteration->processingK2 = true;
+				nextIteration->k2.savedK2WaitTime = nextIteration->k2.generatedK2WaitTime;
+				nextIteration->k2.processingK2 = true;
 
 
 				nextIteration->a1.stringA1WT += "b";
@@ -167,8 +169,8 @@ public:
 				nextIteration->k1.stringK1 += "b";
 				nextIteration->k1.stringK1WT += "b";
 				nextIteration->r1.stringR1 += std::to_string(nextIteration->r1.stR1);
-				nextIteration->stringK2 += "1";
-				nextIteration->stringK2WT += std::to_string(nextIteration->generatedK2WaitTime);
+				nextIteration->k2.stringK2 += "1";
+				nextIteration->k2.stringK2WT += std::to_string(nextIteration->k2.generatedK2WaitTime);
 
 			}
 		}
@@ -185,7 +187,7 @@ public:
 		}
 		else if (lastIteration->k1.savedK1WaitTime == sNIID) {
 			nextIteration->k1.processingK1 = false;
-			nextIteration->k1.stK1 = 0;
+			
 			nextIteration->k1.savedK1WaitTime = 0;
 
 
@@ -193,16 +195,17 @@ public:
 			nextIteration->usedGS += "a";
 			nextIteration->k1.stringK1 += "0";
 			nextIteration->k1.stringK1WT += "a";
-			nextIteration->r1.stringR1 += "a";
-			nextIteration->stringK2 += "a";
-			nextIteration->stringK2WT += "a";
+			nextIteration->r1.stringR1 += std::to_string(nextIteration->r1.stR1);
+			nextIteration->k2.stringK2 += "a";
+			nextIteration->k2.stringK2WT += "a";
 
-			if (nextIteration->processingK2 == false) {
-				nextIteration->processingK2 = true;
+			if (nextIteration->k2.processingK2 == false) {
+				nextIteration->k2.processingK2 = true;
+				
 				generateWaitTime(nextIteration, 3, sNIID);
 
-				nextIteration->savedK2WaitTime = nextIteration->generatedK2WaitTime;
-				nextIteration->K2 = 1;
+				nextIteration->k2.savedK2WaitTime = nextIteration->k2.generatedK2WaitTime;
+				
 
 
 				nextIteration->a1.stringA1WT += "c";
@@ -210,8 +213,8 @@ public:
 				nextIteration->k1.stringK1 += "c";
 				nextIteration->k1.stringK1WT += "c";
 				nextIteration->r1.stringR1 += std::to_string(nextIteration->r1.stR1 + 1);
-				nextIteration->stringK2 += "1";
-				nextIteration->stringK2WT += std::to_string(nextIteration->generatedK2WaitTime);
+				nextIteration->k2.stringK2 += "1";
+				nextIteration->k2.stringK2WT += std::to_string(nextIteration->k2.generatedK2WaitTime);
 			}
 			else {
 				nextIteration->r1.stR1 += 1;
@@ -229,8 +232,9 @@ public:
 			nextIteration->a1.savedA1WaitTime = 0;
 			if (nextIteration->k1.processingK1 == false) {
 				nextIteration->k1.processingK1 = true;
-				nextIteration->k1.stK1 = 1;
+				nextIteration->usedGS = "";
 				generateWaitTime(nextIteration, 2, sNIID);
+
 				nextIteration->k1.savedK1WaitTime = nextIteration->k1.generatedK1WaitTime;
 
 				nextIteration->k1.stringK1 += "1";
@@ -248,9 +252,9 @@ public:
 
 			nextIteration->a1.stringA1WT += std::to_string(nextIteration->a1.generatedA1WaitTime);
 
-			nextIteration->r1.stringR1 += "f";
-			nextIteration->stringK2 += "f";
-			nextIteration->stringK2WT += "f";
+			nextIteration->r1.stringR1 += std::to_string(nextIteration->r1.stR1);
+			nextIteration->k2.stringK2 += "f";
+			nextIteration->k2.stringK2WT += "f";
 
 		}
 	}

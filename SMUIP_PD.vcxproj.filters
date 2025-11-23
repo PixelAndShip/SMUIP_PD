@@ -42,6 +42,9 @@
     <ClInclude Include="ManageSimStates.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="K2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">

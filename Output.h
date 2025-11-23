@@ -23,6 +23,12 @@ public:
 
 
     void printOutputSimState(const SimState& state,GST gst) {
+        
+        /*
+        currenttime A1WT K1WT K2WT output
+        A1 A1enterK1 K1st K1enterR1 R1 R1enterK2 K2st K2exit
+           A1exit
+        */
 
         
     };
@@ -35,10 +41,10 @@ public:
         }
 
         
-        file << "currentTime,usedGS,stringA1WT,stringK1,stringK1WT,stringR1,stringK2,stringK2WT,processedRequests\n";
+        file << "tj,n,A1WT,K1,K1WT,R1,K2,K2WT,Napk\n";
 
        
-        for (const auto& state : states) {
+        for (SimState* state : states) {
             file << state->currentTime << ",";
             
             file << "\"" << state->usedGS << "\",";
@@ -46,8 +52,8 @@ public:
             file << "\"" << state->k1.stringK1 << "\",";
             file << "\"" << state->k1.stringK1WT << "\",";
             file << "\"" << state->r1.stringR1 << "\",";
-            file << "\"" << state->stringK2 << "\",";
-            file << "\"" << state->stringK2WT << "\",";
+            file << "\"" << state->k2.stringK2 << "\",";
+            file << "\"" << state->k2.stringK2WT << "\",";
             file << state->processedRequests << "\n";
         }
         file.close();

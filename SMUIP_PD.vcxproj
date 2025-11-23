@@ -126,6 +126,7 @@
     <ClInclude Include="A1.h" />
     <ClInclude Include="GST.h" />
     <ClInclude Include="K1.h" />
+    <ClInclude Include="K2.h" />
     <ClInclude Include="ManageSimStates.h" />
     <ClInclude Include="Output.h" />
     <ClInclude Include="R1.h" />
