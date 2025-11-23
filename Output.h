@@ -3,6 +3,7 @@
 #include "GST.h"
 #include <iostream>
 #include <fstream>
+#include <windows.h>
 class Output {
 public:
 
@@ -22,15 +23,59 @@ public:
     }
 
 
-    void printOutputSimState(const SimState& state,GST gst) {
+    void printOutputSimStates(SimStates* OSS,GST gst) {
         
-        /*
-        currenttime A1WT K1WT K2WT output
-        A1 A1enterK1 K1st K1enterR1 R1 R1enterK2 K2st K2exit
-           A1exit
-        */
+        
+        bool end = false;
+        int currentId = 0;
+        std::vector<SimState*> SS = OSS->SS;
 
+        SimState* lastIteration = new SimState();
         
+        bool K1 = false;
+       
+        bool K2 = false;
+       
+        if (SS.size() == 0) {
+            std::cout << "ERROR: No simulated states!"<<std::endl;
+            return;
+        }
+        for (int id = 0;id <= SS.back()->currentTime;id++) {
+            bool gotMatchIt = false;
+            for (SimState* currentIteration : SS) {
+                if (currentIteration->currentTime == id) {
+                    lastIteration = currentIteration;
+                    gotMatchIt = true;
+                    break;
+                }
+            }
+            if (gotMatchIt) {
+                gotMatchIt = false;
+                std::cout << "id:" << id<<"|";
+                std::cout << "A1WT:" << lastIteration->a1.stringA1WT << "--->";
+                std::cout << "(K1:" << lastIteration->k1.stringK1 << " " << lastIteration->k1.stringK1WT << ")--->";
+                std::cout << "R1:" << lastIteration->r1.stR1 << "--->";
+                std::cout << "(K2:" << lastIteration->k2.stringK2 << " " << lastIteration->k2.stringK2WT << ")--->";
+                std::cout << "Na:" << lastIteration->processedRequests;
+                
+            }
+            else {
+                
+                std::cout << "id:" << id << "|";
+                std::cout << "A1WT:" << "[]" << "--->";
+                std::cout << "(K1:" << lastIteration->k1.stringK1 << " " << "[]" << ")--->";
+                std::cout << "R1:" << lastIteration->r1.stR1 << "--->";
+                std::cout << "(K2:" << lastIteration->k2.stringK2 << " " << "[]" << ")--->";
+                std::cout << "Na:" << lastIteration->processedRequests;
+
+            }
+            std::cout << std::endl<<std::endl;
+
+        }
+        /*
+        id:0_A1WT:0_(K1:1/0_K1WT:0)_R1:0_(K2:1/0_K2WT:0)_Na:0
+        */
+        delete lastIteration;
     };
 
     void printToExcelCSV(const std::vector<SimState*>& states, const std::string& filename) {
