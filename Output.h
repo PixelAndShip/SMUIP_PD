@@ -32,15 +32,14 @@ public:
 
         SimState* lastIteration = new SimState();
         
-        bool K1 = false;
-       
-        bool K2 = false;
+   
        
         if (SS.size() == 0) {
             std::cout << "ERROR: No simulated states!"<<std::endl;
             return;
         }
-        for (int id = 0;id <= SS.back()->currentTime;id++) {
+        int id = 0;
+        for (;id <= SS.back()->currentTime;id++) {
             bool gotMatchIt = false;
             for (SimState* currentIteration : SS) {
                 if (currentIteration->currentTime == id) {
@@ -58,20 +57,28 @@ public:
                 std::cout << "(K2:" << lastIteration->k2.stringK2 << " " << lastIteration->k2.stringK2WT << ")--->";
                 std::cout << "Na:" << lastIteration->processedRequests;
                 
+
+
             }
             else {
                 
                 std::cout << "id:" << id << "|";
                 std::cout << "A1WT:" << "[]" << "--->";
-                std::cout << "(K1:" << lastIteration->k1.stringK1 << " " << "[]" << ")--->";
+                std::cout << "(K1:" << lastIteration->k1.processingK1 << " " << "[]" << ")--->";
                 std::cout << "R1:" << lastIteration->r1.stR1 << "--->";
-                std::cout << "(K2:" << lastIteration->k2.stringK2 << " " << "[]" << ")--->";
+                std::cout << "(K2:" << lastIteration->k2.processingK2 << " " << "[]" << ")--->";
                 std::cout << "Na:" << lastIteration->processedRequests;
 
             }
+            OSS->K1wl += lastIteration->k1.processingK1;
+            std::cout << OSS->K1wl;
+            OSS->K2wl += lastIteration->k2.processingK2;
+           
             std::cout << std::endl<<std::endl;
 
         }
+        std::cout << "K1 work load:" << OSS->K1wl / id << std::endl;
+        std::cout << "K2 work load:" << OSS->K2wl / id;
         /*
         id:0_A1WT:0_(K1:1/0_K1WT:0)_R1:0_(K2:1/0_K2WT:0)_Na:0
         */
