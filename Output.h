@@ -4,6 +4,7 @@
 #include <iostream>
 #include <fstream>
 #include <windows.h>
+#include <cctype>
 class Output {
 public:
 
@@ -18,7 +19,8 @@ public:
         std::cout << "| |   | |           / / _            / /__     /   |" << std::endl;
         std::cout << "| |   | |          / /_| |_  ______ /  __ \\   /_/| |" << std::endl;  
         std::cout << "| |___| |         /____   _|        \\ \\__\\ \\     | |" << std::endl;  
-        std::cout << "|_______| _______      |_|           \\_____/     |_|" << std::endl; 
+        std::cout << "|_______| _______      |_|           \\_____/     |_|" << std::endl;
+        std::cout << "____________________________________________________"<<std::endl;
 
     }
 
@@ -30,7 +32,7 @@ public:
         int currentId = 0;
         std::vector<SimState*> SS = OSS->SS;
 
-        SimState* lastIteration = new SimState();
+        SimState* currentIteration = new SimState();
         
    
        
@@ -41,9 +43,9 @@ public:
         int id = 0;
         for (;id <= SS.back()->currentTime;id++) {
             bool gotMatchIt = false;
-            for (SimState* currentIteration : SS) {
-                if (currentIteration->currentTime == id) {
-                    lastIteration = currentIteration;
+            for (SimState* matchingIteration : SS) {
+                if (matchingIteration->currentTime == id) {
+                    currentIteration = matchingIteration;
                     gotMatchIt = true;
                     break;
                 }
@@ -51,11 +53,11 @@ public:
             if (gotMatchIt) {
                 gotMatchIt = false;
                 std::cout << "id:" << id<<"|";
-                std::cout << "A1WT:" << lastIteration->a1.stringA1WT << "--->";
-                std::cout << "(K1:" << lastIteration->k1.stringK1 << " " << lastIteration->k1.stringK1WT << ")--->";
-                std::cout << "R1:" << lastIteration->r1.stR1 << "--->";
-                std::cout << "(K2:" << lastIteration->k2.stringK2 << " " << lastIteration->k2.stringK2WT << ")--->";
-                std::cout << "Na:" << lastIteration->processedRequests;
+                std::cout << "A1WT:" << currentIteration->a1.stringA1WT << "--->";
+                std::cout << "(K1:" << currentIteration->k1.stringK1 << " " << currentIteration->k1.stringK1WT << ")--->";
+                std::cout << "R1:" << currentIteration->r1.stringR1 << "--->";
+                std::cout << "(K2:" << currentIteration->k2.stringK2 << " " << currentIteration->k2.stringK2WT << ")--->";
+                std::cout << "Na:" << currentIteration->processedRequests;
                 
 
 
@@ -63,27 +65,50 @@ public:
             else {
                 
                 std::cout << "id:" << id << "|";
-                std::cout << "A1WT:" << "[]" << "--->";
-                std::cout << "(K1:" << lastIteration->k1.processingK1 << " " << "[]" << ")--->";
-                std::cout << "R1:" << lastIteration->r1.stR1 << "--->";
-                std::cout << "(K2:" << lastIteration->k2.processingK2 << " " << "[]" << ")--->";
-                std::cout << "Na:" << lastIteration->processedRequests;
+                std::cout << "A1WT:" << "n" << "--->";
+                std::cout << "(K1:" << currentIteration->k1.processingK1 << " " << "n" << ")--->";
+                std::cout << "R1:" << currentIteration->r1.stringR1 << "--->";
+                std::cout << "(K2:" << currentIteration->k2.processingK2 << " " << "n" << ")--->";
+                std::cout << "Na:" << currentIteration->processedRequests;
 
             }
-            OSS->K1wl += lastIteration->k1.processingK1;
-            std::cout << OSS->K1wl;
-            OSS->K2wl += lastIteration->k2.processingK2;
-           
+            manageU_4_61_Tasks(OSS, currentIteration);
+            
             std::cout << std::endl<<std::endl;
 
         }
-        std::cout << "K1 work load:" << OSS->K1wl / id << std::endl;
-        std::cout << "K2 work load:" << OSS->K2wl / id;
+       
+        std::cout << "K1 work load:" << OSS->K1wl / (id-1) << std::endl;
+        std::cout << "K2 work load:" << OSS->K2wl / (id-1) << std::endl;
+        std::cout << "R1 average length:" << OSS->totalR1 / (id-1);
+        if (OSS->R1in > 0) {
+            std::cout << "R1 average wait time length 2:" << OSS->totalR1 / (OSS->R1in);
+        }
         /*
         id:0_A1WT:0_(K1:1/0_K1WT:0)_R1:0_(K2:1/0_K2WT:0)_Na:0
         */
-        delete lastIteration;
+        delete currentIteration;
     };
+
+    void manageU_4_61_Tasks(SimStates* OSS,SimState* lastIteration) {
+        OSS->K1wl += lastIteration->k1.processingK1;
+        int maxR1 = 0;
+        for (int i = 0;i < lastIteration->r1.stringR1.size();i++) {
+            int intR1State = lastIteration->r1.stringR1[i] - '0';
+            if (!isdigit(lastIteration->r1.stringR1[i])) {
+                continue;
+            }
+            if (intR1State > maxR1) {
+                maxR1 = intR1State;
+            }
+            
+
+        }
+
+        OSS->totalR1 += maxR1;
+        OSS->K2wl += lastIteration->k2.processingK2;
+    }
+
 
     void printToExcelCSV(const std::vector<SimState*>& states, const std::string& filename) {
         std::ofstream file(filename);

@@ -130,6 +130,7 @@
     <ClInclude Include="ManageSimStates.h" />
     <ClInclude Include="Output.h" />
     <ClInclude Include="R1.h" />
+    <ClInclude Include="R1QueueState.h" />
     <ClInclude Include="SimState.h" />
     <ClInclude Include="SimStates.h" />
   </ItemGroup>

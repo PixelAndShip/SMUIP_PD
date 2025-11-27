@@ -29,7 +29,7 @@ public:
 		k1.processingK1 = procK1;
 		k2.savedK2WaitTime = lSavedK2;
 		k2.processingK2 = procK2;
-
+		
 	}
 
 	SimState(int savedA1,int savedK1,int savedK2,int lR1,int procR): 

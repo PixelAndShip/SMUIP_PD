@@ -27,10 +27,10 @@ public:
 		OSS.SS.push_back(newIteration);
 	}
 
-	void Simulate_U_4_61() {
-		OP.launchPrint();
+	void Simulate_U_4_61(int mPR) {
+		
 		//OSS.SS.back()->processedRequests != 4
-		while (OSS.SS.back()->processedRequests != 4) {
+		while (OSS.SS.back()->processedRequests != mPR) {
 
 			newIteration = generateIteration(newIteration);
 			OSS.SS.push_back(newIteration);
@@ -122,6 +122,12 @@ public:
 		manageNextIteration(lastIteration, newIteration, smallestNextIterationID);
 		return newIteration;
 	}
+
+
+	void manageR1QueteStates() {
+
+	}
+
 	void manageNextIteration(SimState* lastIteration, SimState* nextIteration, int sNIID) {
 		nextIteration->r1.stR1 = lastIteration->r1.stR1;
 		if (lastIteration->k2.savedK2WaitTime != sNIID) {
@@ -143,11 +149,11 @@ public:
 
 
 
-				nextIteration->usedGS += "n";
+				nextIteration->usedGS += "n ";
 				nextIteration->a1.stringA1WT += "n";
 				nextIteration->k1.stringK1 += "n";
 				nextIteration->k1.stringK1WT += "n";
-				nextIteration->r1.stringR1 += std::to_string(nextIteration->r1.stR1);
+				nextIteration->r1.stringR1 += std::to_string(nextIteration->r1.stR1)+" ";
 				nextIteration->k2.stringK2 += "0";
 				nextIteration->k2.stringK2WT += "n";
 
@@ -169,7 +175,7 @@ public:
 
 				nextIteration->k1.stringK1 += "n";
 				nextIteration->k1.stringK1WT += "n";
-				nextIteration->r1.stringR1 += std::to_string(nextIteration->r1.stR1);
+				nextIteration->r1.stringR1 += std::to_string(nextIteration->r1.stR1) + " ";
 				nextIteration->k2.stringK2 += "1";
 				nextIteration->k2.stringK2WT += std::to_string(nextIteration->k2.generatedK2WaitTime);
 
@@ -193,10 +199,11 @@ public:
 
 
 			nextIteration->a1.stringA1WT += "n";
-			nextIteration->usedGS += "n";
+			nextIteration->usedGS += "n ";
 			nextIteration->k1.stringK1 += "0";
 			nextIteration->k1.stringK1WT += "n";
-			nextIteration->r1.stringR1 += std::to_string(nextIteration->r1.stR1);
+			nextIteration->r1.stringR1 += std::to_string(nextIteration->r1.stR1) + " ";
+			
 			nextIteration->k2.stringK2 += "n";
 			nextIteration->k2.stringK2WT += "n";
 
@@ -213,13 +220,13 @@ public:
 
 				nextIteration->k1.stringK1 += "n";
 				nextIteration->k1.stringK1WT += "n";
-				nextIteration->r1.stringR1 += std::to_string(nextIteration->r1.stR1 + 1);
+				nextIteration->r1.stringR1 += std::to_string(nextIteration->r1.stR1 + 1) + " ";
 				nextIteration->k2.stringK2 += "1";
 				nextIteration->k2.stringK2WT += std::to_string(nextIteration->k2.generatedK2WaitTime);
 			}
 			else {
 				nextIteration->r1.stR1 += 1;
-				nextIteration->r1.stringR1 = std::to_string(nextIteration->r1.stR1);
+				nextIteration->r1.stringR1 = std::to_string(nextIteration->r1.stR1) + " ";
 			}
 
 
@@ -253,7 +260,7 @@ public:
 
 			nextIteration->a1.stringA1WT += std::to_string(nextIteration->a1.generatedA1WaitTime);
 
-			nextIteration->r1.stringR1 += std::to_string(nextIteration->r1.stR1);
+			nextIteration->r1.stringR1 += std::to_string(nextIteration->r1.stR1) + " ";
 			nextIteration->k2.stringK2 += "n";
 			nextIteration->k2.stringK2WT += "n";
 
