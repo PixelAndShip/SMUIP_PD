@@ -9,11 +9,6 @@ class Output {
 public:
 
 
-
-    void printToTXT(SimStates* AllStates, GST UsedGS) {
-
-    };
-
     void launchPrint() {
         std::cout << "                     __               __        ___" << std::endl;
         std::cout << "| |   | |           / / _            / /__     /   |" << std::endl;
@@ -97,6 +92,7 @@ public:
 
     void manageU_4_61_Tasks(SimStates* OSS,SimState* lastIteration) {
         OSS->K1wl += lastIteration->k1.processingK1;
+        OSS->K2wl += lastIteration->k2.processingK2;
         int maxR1 = 0;
         for (int i = 0;i < lastIteration->r1.stringR1.size();i++) {
             int intR1State = lastIteration->r1.stringR1[i] - '0';
@@ -111,7 +107,7 @@ public:
         }
 
         OSS->totalR1 += maxR1;
-        OSS->K2wl += lastIteration->k2.processingK2;
+        
     }
 
 

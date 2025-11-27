@@ -126,10 +126,6 @@ public:
 	}
 
 
-	void manageR1QueteStates() {
-
-	}
-
 	void manageNextIteration(SimState* lastIteration, SimState* nextIteration, int sNIID) {
 		nextIteration->r1.stR1 = lastIteration->r1.stR1;
 	
