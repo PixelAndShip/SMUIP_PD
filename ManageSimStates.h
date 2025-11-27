@@ -22,6 +22,8 @@ public:
 		GSTable.currentNumberId += 1;
 		firstIteration->usedGS = "1";
 
+		OSS.firstInLine = nullptr;
+
 		OSS.SS.push_back(firstIteration);
 		newIteration = generateIteration(firstIteration);
 		OSS.SS.push_back(newIteration);
@@ -130,15 +132,18 @@ public:
 
 	void manageNextIteration(SimState* lastIteration, SimState* nextIteration, int sNIID) {
 		nextIteration->r1.stR1 = lastIteration->r1.stR1;
+	
+		
+	
 		if (lastIteration->k2.savedK2WaitTime != sNIID) {
 			nextIteration->k2.savedK2WaitTime = lastIteration->k2.savedK2WaitTime;
 			if (lastIteration->k2.processingK2 == true) {
 				nextIteration->k2.processingK2 = true;
+
 			}
 		}
 
 		else if (lastIteration->k2.savedK2WaitTime == sNIID) {
-
 
 
 			if (lastIteration->k2.processingK2 == true) {
@@ -154,6 +159,7 @@ public:
 				nextIteration->k1.stringK1 += "n";
 				nextIteration->k1.stringK1WT += "n";
 				nextIteration->r1.stringR1 += std::to_string(nextIteration->r1.stR1)+" ";
+				
 				nextIteration->k2.stringK2 += "0";
 				nextIteration->k2.stringK2WT += "n";
 
@@ -176,6 +182,11 @@ public:
 				nextIteration->k1.stringK1 += "n";
 				nextIteration->k1.stringK1WT += "n";
 				nextIteration->r1.stringR1 += std::to_string(nextIteration->r1.stR1) + " ";
+			
+				OSS.totalR1WT += (sNIID - OSS.releaseFirstInLine());
+				
+				
+				OSS.R1out += 1;
 				nextIteration->k2.stringK2 += "1";
 				nextIteration->k2.stringK2WT += std::to_string(nextIteration->k2.generatedK2WaitTime);
 
@@ -203,7 +214,9 @@ public:
 			nextIteration->k1.stringK1 += "0";
 			nextIteration->k1.stringK1WT += "n";
 			nextIteration->r1.stringR1 += std::to_string(nextIteration->r1.stR1) + " ";
+			OSS.addNewR1QueueState(sNIID);
 			
+			OSS.R1in += 1;
 			nextIteration->k2.stringK2 += "n";
 			nextIteration->k2.stringK2WT += "n";
 
@@ -213,19 +226,23 @@ public:
 				generateWaitTime(nextIteration, 3, sNIID);
 
 				nextIteration->k2.savedK2WaitTime = nextIteration->k2.generatedK2WaitTime;
-				
-
 
 				nextIteration->a1.stringA1WT += "n";
 
 				nextIteration->k1.stringK1 += "n";
 				nextIteration->k1.stringK1WT += "n";
 				nextIteration->r1.stringR1 += std::to_string(nextIteration->r1.stR1 + 1) + " ";
+				OSS.R1out += 1;
+				
+				OSS.totalR1WT += (sNIID - OSS.releaseFirstInLine());
+		
 				nextIteration->k2.stringK2 += "1";
 				nextIteration->k2.stringK2WT += std::to_string(nextIteration->k2.generatedK2WaitTime);
 			}
+
 			else {
 				nextIteration->r1.stR1 += 1;
+				
 				nextIteration->r1.stringR1 = std::to_string(nextIteration->r1.stR1) + " ";
 			}
 
@@ -247,8 +264,6 @@ public:
 
 				nextIteration->k1.stringK1 += "1";
 				nextIteration->k1.stringK1WT += std::to_string(nextIteration->k1.generatedK1WaitTime);
-
-
 
 			}
 			else {

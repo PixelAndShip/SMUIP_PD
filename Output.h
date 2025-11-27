@@ -80,10 +80,15 @@ public:
        
         std::cout << "K1 work load:" << OSS->K1wl / (id-1) << std::endl;
         std::cout << "K2 work load:" << OSS->K2wl / (id-1) << std::endl;
-        std::cout << "R1 average length:" << OSS->totalR1 / (id-1);
+        std::cout << "R1 average length:" << OSS->totalR1 / (id-1)<<std::endl;
+        if (OSS->R1out > 0) {
+            std::cout << "R1 average wait time length 1:" << OSS->totalR1WT / (OSS->R1out)<<std::endl;
+        }
         if (OSS->R1in > 0) {
             std::cout << "R1 average wait time length 2:" << OSS->totalR1 / (OSS->R1in);
         }
+        
+
         /*
         id:0_A1WT:0_(K1:1/0_K1WT:0)_R1:0_(K2:1/0_K2WT:0)_Na:0
         */
