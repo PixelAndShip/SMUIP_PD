@@ -1,4 +1,6 @@
 #pragma once
+
+// Same structure as K1, however purpouse is to be the final requests proccessing channel, reflects functionality in ManageSimStates
 class K2 {
 public:
 	int generatedK2WaitTime = 0;
