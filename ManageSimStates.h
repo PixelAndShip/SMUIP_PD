@@ -32,7 +32,7 @@ public:
 	void Simulate_U_4_61(int mPR) {
 		
 		//OSS.SS.back()->processedRequests != 4
-		while (OSS.SS.back()->processedRequests != mPR) {
+		while (OSS.SS.back()->processedRequests != mPR and GSTable.currentNumberId<GSTable.randomNumbers.size()) {
 
 			newIteration = generateIteration(newIteration);
 			OSS.SS.push_back(newIteration);
