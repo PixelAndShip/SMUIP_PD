@@ -73,14 +73,14 @@ public:
 
         }
        
-        std::cout << "K1 work load:" << OSS->K1wl / (id-1) << std::endl;
-        std::cout << "K2 work load:" << OSS->K2wl / (id-1) << std::endl;
-        std::cout << "R1 average length:" << OSS->totalR1 / (id-1)<<std::endl;
+        std::cout << "K1 work load: Total-K1-proccessing-iterations/Total-iterations= " << OSS->K1wl << "/" << (id - 1) << "= " << OSS->K1wl / (id - 1) << std::endl;
+        std::cout << "K2 work load: Total-K2-proccessing-iterations/Total-iterations= " << OSS->K2wl << "/" << (id - 1) << "= " << OSS->K2wl / (id - 1) << std::endl;
+        std::cout << "R1 average length: Total-R1-requests/Total-iterations= "<<OSS->totalR1<<"/"<<(id-1)<<"= " << OSS->totalR1 / (id - 1) << std::endl;
         if (OSS->R1out > 0) {
-            std::cout << "R1 average wait time length 1:Total-R1-Wait-time/R1-exited-requests=" << OSS->totalR1WT<<"/"<<OSS->R1out <<"=" << OSS->totalR1WT / OSS->R1out << std::endl;
+            std::cout << "R1 average wait time length 1: Total-R1-Wait-time/R1-exited-requests= " << OSS->totalR1WT<<"/"<<OSS->R1out <<"= " << OSS->totalR1WT / OSS->R1out << std::endl;
         }
         if (OSS->R1in > 0) {
-            std::cout << "R1 average wait time length 2:Total-R1-requests/R1-entered-requests="<<OSS->totalR1<<"/"<<OSS->R1in<<"=" << OSS->totalR1 / OSS->R1in;
+            std::cout << "R1 average wait time length 2: Total-R1-requests/R1-entered-requests= "<<OSS->totalR1<<"/"<<OSS->R1in<<"= " << OSS->totalR1 / OSS->R1in;
         }
         
 
