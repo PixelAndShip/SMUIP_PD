@@ -10,7 +10,7 @@ public:
 
 
     void launchPrint() {
-        std::cout << "                     __               __        ___" << std::endl;
+        std::cout << "                    __               __        ___" << std::endl;
         std::cout << "| |   | |           / / _            / /__     /   |" << std::endl;
         std::cout << "| |   | |          / /_| |_  ______ /  __ \\   /_/| |" << std::endl;  
         std::cout << "| |___| |         /____   _|        \\ \\__\\ \\     | |" << std::endl;  
@@ -92,21 +92,28 @@ public:
 
     void manageU_4_61_Tasks(SimStates* OSS,SimState* lastIteration) {
         OSS->K1wl += lastIteration->k1.processingK1;
+        
+       
         OSS->K2wl += lastIteration->k2.processingK2;
-        int maxR1 = 0;
-        for (int i = 0;i < lastIteration->r1.stringR1.size();i++) {
+        
+        int lastR1 = 0;
+        for (int i = lastIteration->r1.stringR1.size()-1;i>=0;i--) {
+            
             int intR1State = lastIteration->r1.stringR1[i] - '0';
             if (!isdigit(lastIteration->r1.stringR1[i])) {
                 continue;
             }
-            if (intR1State > maxR1) {
-                maxR1 = intR1State;
+            else {
+                lastR1 = intR1State;
+                break;
             }
+           
+            
             
 
         }
-
-        OSS->totalR1 += maxR1;
+        
+        OSS->totalR1 += lastR1;
         
     }
 
