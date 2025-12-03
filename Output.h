@@ -10,7 +10,7 @@ public:
 
 
     void launchPrint() {
-        std::cout << "                    __               __        ___" << std::endl;
+        std::cout << "                     __               __        ___" << std::endl;
         std::cout << "| |   | |           / / _            / /__     /   |" << std::endl;
         std::cout << "| |   | |          / /_| |_  ______ /  __ \\   /_/| |" << std::endl;  
         std::cout << "| |___| |         /____   _|        \\ \\__\\ \\     | |" << std::endl;  
