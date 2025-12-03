@@ -92,29 +92,8 @@ public:
 
     void manageU_4_61_Tasks(SimStates* OSS,SimState* lastIteration) {
         OSS->K1wl += lastIteration->k1.processingK1;
-        
-       
         OSS->K2wl += lastIteration->k2.processingK2;
-        
-        int lastR1 = 0;
-        for (int i = lastIteration->r1.stringR1.size()-1;i>=0;i--) {
-            
-            int intR1State = lastIteration->r1.stringR1[i] - '0';
-            if (!isdigit(lastIteration->r1.stringR1[i])) {
-                continue;
-            }
-            else {
-                lastR1 = intR1State;
-                break;
-            }
-           
-            
-            
-
-        }
-        
-        OSS->totalR1 += lastR1;
-        
+        OSS->totalR1 += lastIteration->r1.stR1;
     }
 
 
