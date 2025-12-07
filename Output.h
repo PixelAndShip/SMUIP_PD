@@ -67,7 +67,10 @@ public:
                 std::cout << "Na:" << currentIteration->processedRequests;
 
             }
-            manageU_4_61_Tasks(OSS, currentIteration);
+            if (id < SS.back()->currentTime) {
+                manageU_4_61_Tasks(OSS, currentIteration);
+            }
+            
             
             std::cout << std::endl<<std::endl;
 

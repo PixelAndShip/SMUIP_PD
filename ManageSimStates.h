@@ -9,7 +9,7 @@ public:
 	SimStates OSS = SimStates();
 	SimState* firstIteration = new SimState();
 	SimState* newIteration  = nullptr;
-	
+	int MPR = 0;
 	ManageSimStates() {
 		firstIteration->a1.savedA1WaitTime = 2;
 		firstIteration->a1.generatedA1WaitTime = 2;
@@ -30,12 +30,13 @@ public:
 	}
 
 	void Simulate_U_4_61(int mPR) {
-		
+		MPR = mPR;
 		//OSS.SS.back()->processedRequests != 4
-		while (OSS.SS.back()->processedRequests != mPR and GSTable.currentNumberId<GSTable.randomNumbers.size()) {
+		while (OSS.SS.back()->processedRequests != MPR and GSTable.currentNumberId<GSTable.randomNumbers.size()) {
 
 			newIteration = generateIteration(newIteration);
 			OSS.SS.push_back(newIteration);
+			
 			
 		}
 		
@@ -142,6 +143,7 @@ public:
 
 
 			if (lastIteration->k2.processingK2 == true) {
+				
 				nextIteration->processedRequests += 1;
 				nextIteration->k2.processingK2 = false;
 				
@@ -180,11 +182,15 @@ public:
 				nextIteration->k1.stringK1 += "n";
 				nextIteration->k1.stringK1WT += "n";
 				nextIteration->r1.stringR1 += std::to_string(nextIteration->r1.stR1) + " ";
-			
 				OSS.totalR1WT += (sNIID - OSS.releaseFirstInLine());
+				if (nextIteration->processedRequests < MPR) {
+					OSS.R1out += 1;
+				}
+				else {
+					OSS.totalR1WT -= 1;
+					OSS.releaseFirstInLine();
+				}
 				
-				
-				OSS.R1out += 1;
 				nextIteration->k2.stringK2 += "1";
 				nextIteration->k2.stringK2WT += std::to_string(nextIteration->k2.generatedK2WaitTime);
 
@@ -215,8 +221,10 @@ public:
 			//nextIteration->r1.stringR1 += std::to_string(nextIteration->r1.stR1) + " ";
 			OSS.addNewR1QueueState(sNIID);
 			nextIteration->usedGS += "n ";
+			if (nextIteration->processedRequests < MPR) {
+				OSS.R1in += 1;
+			}
 			
-			OSS.R1in += 1;
 			nextIteration->k2.stringK2 += "n";
 			nextIteration->k2.stringK2WT += "n";
 
@@ -240,9 +248,14 @@ public:
 				nextIteration->k1.stringK1 += "n";
 				nextIteration->k1.stringK1WT += "n";
 				nextIteration->r1.stringR1 += std::to_string(nextIteration->r1.stR1) + " ";
-				OSS.R1out += 1;
-				
 				OSS.totalR1WT += (sNIID - OSS.releaseFirstInLine());
+				if (nextIteration->processedRequests < MPR) {
+					OSS.R1out += 1;
+				}
+				else {
+					OSS.totalR1WT -= 1;
+					OSS.releaseFirstInLine();
+				}
 		
 				nextIteration->k2.stringK2 += "1";
 				nextIteration->k2.stringK2WT += std::to_string(nextIteration->k2.generatedK2WaitTime);
