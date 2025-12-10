@@ -19,4 +19,12 @@ public:
 	int K1[3] = { 2,3,4 };
 	int K2[5] = { 4,5,6,7,8 };
 
+	float nextRandom() {
+		if (currentNumberId >= static_cast<int>(randomNumbers.size())) {
+			float r =((double)rand()) / RAND_MAX;
+			randomNumbers.push_back(r);
+		}
+		return randomNumbers[currentNumberId++];
+	}
+
 };

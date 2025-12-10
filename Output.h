@@ -21,8 +21,8 @@ public:
 
 
     void printOutputSimStates(SimStates* OSS,GST gst) {
-        
-        
+        auto start = std::chrono::high_resolution_clock::now();
+
         bool end = false;
         int currentId = 0;
         std::vector<SimState*> SS = OSS->SS;
@@ -33,6 +33,14 @@ public:
        
         if (SS.size() == 0) {
             std::cout << "ERROR: No simulated states!"<<std::endl;
+            delete currentIteration;
+            return;
+        }
+
+        std::ofstream stateFile("simstates.txt");
+        if (!stateFile) {
+            std::cout << "Failed to open simstates.txt" << std::endl;
+            delete currentIteration;
             return;
         }
         int id = 0;
@@ -45,36 +53,56 @@ public:
                     break;
                 }
             }
-            if (gotMatchIt) {
-                gotMatchIt = false;
-                std::cout << "id:" << id<<"|";
-                std::cout << "A1WT:" << currentIteration->a1.stringA1WT << "--->";
-                std::cout << "(K1:" << currentIteration->k1.stringK1 << " " << currentIteration->k1.stringK1WT << ")--->";
-                std::cout << "R1:" << currentIteration->r1.stringR1 << "--->";
-                std::cout << "(K2:" << currentIteration->k2.stringK2 << " " << currentIteration->k2.stringK2WT << ")--->";
-                std::cout << "Na:" << currentIteration->processedRequests;
+            auto printState = [&](auto&& self) -> void {
                 
+                stateFile << "id:" << id << "|";
 
+             
+                stateFile << "A1WT:" << currentIteration->a1.stringA1WT << "--->";
 
+               
+                stateFile << "(K1:" << currentIteration->k1.stringK1 << " " << currentIteration->k1.stringK1WT << ")--->";
+
+           
+                stateFile << "R1:" << currentIteration->r1.stringR1 << "--->";
+
+            
+                stateFile << "(K2:" << currentIteration->k2.stringK2 << " " << currentIteration->k2.stringK2WT << ")--->";
+
+              
+                stateFile << "Na:" << currentIteration->processedRequests;
+
+               
+                stateFile << std::endl << std::endl;
+                };
+            if (gotMatchIt) {
+                printState(printState);
             }
             else {
                 
-                std::cout << "id:" << id << "|";
-                std::cout << "A1WT:" << "n" << "--->";
-                std::cout << "(K1:" << currentIteration->k1.processingK1 << " " << "n" << ")--->";
-                std::cout << "R1:" << currentIteration->r1.stringR1 << "--->";
-                std::cout << "(K2:" << currentIteration->k2.processingK2 << " " << "n" << ")--->";
-                std::cout << "Na:" << currentIteration->processedRequests;
-
+                stateFile << "id:" << id << "|";
+               
+                stateFile << "A1WT:" << "n" << "--->";
+              
+                stateFile << "(K1:" << currentIteration->k1.processingK1 << " " << "n" << ")--->";
+           
+                stateFile << "R1:" << currentIteration->r1.stringR1 << "--->";
+         
+                stateFile << "(K2:" << currentIteration->k2.processingK2 << " " << "n" << ")--->";
+               
+                stateFile << "Na:" << currentIteration->processedRequests;
+            
+                stateFile << std::endl << std::endl;
             }
             if (id < SS.back()->currentTime) {
                 manageU_4_61_Tasks(OSS, currentIteration);
             }
             
             
-            std::cout << std::endl<<std::endl;
+            
 
         }
+        stateFile.close();
        
         std::cout << "K1 work load: Total-K1-proccessing-iterations/Total-iterations= " << OSS->K1wl << "/" << (id - 1) << "= " << OSS->K1wl / (id - 1) << std::endl;
         std::cout << "K2 work load: Total-K2-proccessing-iterations/Total-iterations= " << OSS->K2wl << "/" << (id - 1) << "= " << OSS->K2wl / (id - 1) << std::endl;
@@ -87,9 +115,10 @@ public:
         }
         
 
-        /*
-        id:0_A1WT:0_(K1:1/0_K1WT:0)_R1:0_(K2:1/0_K2WT:0)_Na:0
-        */
+        
+        auto stop = std::chrono::high_resolution_clock::now();
+        std::cout << std::endl << "Simulation output to .txt file time: " << std::chrono::duration_cast<std::chrono::microseconds>(stop - start).count() << " (microseconds)" << std::endl;
+       
         delete currentIteration;
     };
 
@@ -101,6 +130,7 @@ public:
 
 
     void printToExcelCSV(const std::vector<SimState*>& states, const std::string& filename) {
+        auto start = std::chrono::high_resolution_clock::now();
         std::ofstream file(filename);
         if (!file.is_open()) {
             std::cerr << "Error opening file for writing: " << filename << std::endl;
@@ -124,7 +154,10 @@ public:
             file << state->processedRequests << "\n";
         }
         file.close();
-        std::cout << "Excel CSV output saved to: " << filename << std::endl;
+        std::cout << "Excel CSV output saved to: " << filename;
+        auto stop = std::chrono::high_resolution_clock::now();
+        std::cout << std::endl << "Simulation output to .csv file time: " << std::chrono::duration_cast<std::chrono::microseconds>(stop - start).count() << " (microseconds)" << std::endl;
+        
     }
 
 

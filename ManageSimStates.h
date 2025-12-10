@@ -1,6 +1,7 @@
 #pragma once
 #include "SimStates.h"
 #include "GST.h"
+#include <chrono>
 #include "Output.h"
 class ManageSimStates {
 public:
@@ -11,6 +12,13 @@ public:
 	SimState* newIteration  = nullptr;
 	int MPR = 0;
 	ManageSimStates() {
+		preCalculatedFirstIterationSetup();
+		OSS.firstInLine = nullptr;
+		OSS.SS.push_back(firstIteration);
+		newIteration = generateIteration(firstIteration);
+		OSS.SS.push_back(newIteration);
+	}
+	void preCalculatedFirstIterationSetup() {
 		firstIteration->a1.savedA1WaitTime = 2;
 		firstIteration->a1.generatedA1WaitTime = 2;
 		firstIteration->a1.stringA1WT += "2";
@@ -21,34 +29,33 @@ public:
 		firstIteration->k1.stringK1WT += "n";
 		GSTable.currentNumberId += 1;
 		firstIteration->usedGS = "1";
-		
-		OSS.firstInLine = nullptr;
-
-		OSS.SS.push_back(firstIteration);
-		newIteration = generateIteration(firstIteration);
-		OSS.SS.push_back(newIteration);
 	}
-
 	void Simulate_U_4_61(int mPR) {
 		MPR = mPR;
-		//OSS.SS.back()->processedRequests != 4
-		while (OSS.SS.back()->processedRequests != MPR and GSTable.currentNumberId<GSTable.randomNumbers.size()) {
+		srand(time(0));
+		auto start = std::chrono::high_resolution_clock::now();
+		while (OSS.SS.back()->processedRequests != MPR) {
 
 			newIteration = generateIteration(newIteration);
 			OSS.SS.push_back(newIteration);
-			
+			if ((GSTable.currentNumberId - 1) == GSTable.randomNumbers.size()) {
+				GSTable.randomNumbers.push_back((double)rand() / RAND_MAX);
+			}
 			
 		}
-		
-	
+		auto stop = std::chrono::high_resolution_clock::now();
+		std::cout << "Simulation exection time: " << std::chrono::duration_cast<std::chrono::microseconds>(stop - start).count() << " (microseconds)" << std::endl;
 		OP.printToExcelCSV(OSS.SS, "U_4_61.csv");
 		OP.printOutputSimStates(&OSS, GSTable);
+		system("pause");
 	}
 	
 
 
 	void generateWaitTime(SimState* nextIteration, int type, int currentID) {
-		GSTable.currentNumberId += 1;
+		float randomNumber = GSTable.nextRandom();
+		
+	
 		nextIteration->usedGS += std::to_string(GSTable.currentNumberId) + " ";
 		if ((GSTable.currentNumberId - 1) < GSTable.randomNumbers.size()) {
 			float randomNumber = GSTable.randomNumbers[GSTable.currentNumberId - 1];
@@ -104,17 +111,13 @@ public:
 	}
 	int getNextIterationNumber(SimState* lastIteration) {
 		int nums[] = { lastIteration->a1.savedA1WaitTime,lastIteration->k1.savedK1WaitTime,lastIteration->k2.savedK2WaitTime };
-
 		int n = sizeof(nums) / sizeof(nums[0]);
-
 		int smallestNextIterationID = *std::max_element(nums, nums + n);
-		
 		for (int num : nums) {
 			if (num < smallestNextIterationID && num != 0) {
 				smallestNextIterationID = num;
 			}
 		}
-		
 		return smallestNextIterationID;
 	}
 	SimState* generateIteration(SimState* lastIteration) {
@@ -140,36 +143,24 @@ public:
 		}
 
 		else if (lastIteration->k2.savedK2WaitTime == sNIID) {
-
-
 			if (lastIteration->k2.processingK2 == true) {
-				
 				nextIteration->processedRequests += 1;
 				nextIteration->k2.processingK2 = false;
-				
 				nextIteration->k2.savedK2WaitTime = 0;
-
-
-
 				nextIteration->usedGS += "n ";
-			
 				nextIteration->a1.stringA1WT += "n";
 				nextIteration->k1.stringK1 += "n";
 				nextIteration->k1.stringK1WT += "n";
 				nextIteration->r1.stringR1 += std::to_string(nextIteration->r1.stR1)+" ";
-				
 				nextIteration->k2.stringK2 += "0";
 				nextIteration->k2.stringK2WT += "n";
-
 			}
 		}
 
 
 		if (nextIteration->k2.processingK2 == false) {
-
 			if (nextIteration->r1.stR1 != 0) {
 				nextIteration->r1.stR1 -= 1;
-				
 				generateWaitTime(nextIteration, 3, sNIID);
 			
 				nextIteration->k2.savedK2WaitTime = nextIteration->k2.generatedK2WaitTime;
@@ -306,14 +297,9 @@ public:
 
 			}
 			
-			//else {
-			//	nextIteration->k1.stringK1 += "n";
-			//	nextIteration->k1.stringK1WT += "n";
-			//}
+			
 
 		}
-		//if (sections > GSgenerated && nextIteration->usedGS[0]=='n'&& nextIteration->usedGS.size()!=1) {
-			//nextIteration->usedGS = nextIteration->usedGS.substr(1);
-		//}
+		
 	}
 };
