@@ -47,6 +47,7 @@ public:
 		std::cout << "Simulation exection time: " << std::chrono::duration_cast<std::chrono::microseconds>(stop - start).count() << " (microseconds)" << std::endl;
 		OP.printToExcelCSV(OSS.SS, "U_4_61.csv");
 		OP.printOutputSimStates(&OSS, GSTable);
+		std::cout << "Simulation finished, you can now exit\n";
 		system("pause");
 	}
 	

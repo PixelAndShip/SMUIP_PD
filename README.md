@@ -1,8 +1,8 @@
 ﻿# Studiju priekšmeta "Sistēmu modelēšanas un imitācijas pamati" patstāvīgais darbs variants 4-61 (U_4-61)
 
-## **Programmas funkcionalitātes apraksts**
 
-### Programmas uzdevums
+## Programmas uzdevums
+
 1.Jāmodelē sistēmas darbs līdz momentam, kad beigsies ceturtā pieprasījuma apkalpošana
 kanālā K2.
 
@@ -21,7 +21,13 @@ kanālā K2.
 * chrono
 
 ## **Programmas izmantošanas ceļvedis**
-1. 
+1. Lai palaistu programmu, jāpalaiž fails SMUIP_PD.exe, kurš palaidīs pamatsistēmas termināli.
+2. Lai beigtu programmas izpildi, terminālī jāievada no klavietūras CTRL+C.
+3. Programmas izsauktajā terminālī būs instrukcija ievadīt maksimālo procesējamo pieprasījumu skaitu simulācijai, to jāievada kā veselu skaitli, bez papildus zīmēm un simboliem.
+4. Ievadot skaitli un nospiežot klavietūras taustiņu "Enter", simulācija tiks palaista, un tiks izvadīti dotā uzdevuma dati, kā arī faila nosaukumi, kur atrodamas iterāciju parametru vizualizācijas.
+5. Dotie faili ar iterāciju vizualizācijām atrodami tajā pašā direktorijā kur atrodas SMUIP_PD.exe fails.
+6. Programma ir beigusi izpildi kad terminālī tiek izvadīts teksts "Simulation finished, you can now exit".
+
 ## Programmas struktūras un galvenās funkcionalitātes apraksts
 1.Programma tiek palaista caur `main.cpp` faila `main()` funkciju, kura pamatsaskarnē terminālī iegūst maksimālo procesējamo pieprasījumu skaitu no lietotāja. </br>
 
@@ -35,6 +41,7 @@ kanālā K2.
 
 3.Kad tiek sasniegts maksimālais procesējamo pieprasījumu skaits, iegūtās iterācijas tiek izvadītas .csv failā klases `Output` objekta metodē printToExcelCSV(), tiek izrēķinātas uzdevumā dotās vērtības metodē `printOutputSimStates()`, kā arī izvadītas .txt failā notikumu momentu un starp-momentu iterācijas parametri.
 
+Failu apraksti:
 
 <details>
 <summary>main.cpp</summary>
