@@ -51,11 +51,11 @@ public:
 	}
 	
 
-
+	
 	void generateWaitTime(SimState* nextIteration, int type, int currentID) {
 		float randomNumber = GSTable.nextRandom();
 		
-	
+		// Updates the outputable used up random number string
 		nextIteration->usedGS += std::to_string(GSTable.currentNumberId) + " ";
 		if ((GSTable.currentNumberId - 1) < GSTable.randomNumbers.size()) {
 			float randomNumber = GSTable.randomNumbers[GSTable.currentNumberId - 1];
@@ -109,7 +109,9 @@ public:
 
 
 	}
+	// gets smallest iteration moment for next iteration thats bigger than 0
 	int getNextIterationNumber(SimState* lastIteration) {
+		
 		int nums[] = { lastIteration->a1.savedA1WaitTime,lastIteration->k1.savedK1WaitTime,lastIteration->k2.savedK2WaitTime };
 		int n = sizeof(nums) / sizeof(nums[0]);
 		int smallestNextIterationID = *std::max_element(nums, nums + n);
@@ -120,20 +122,24 @@ public:
 		}
 		return smallestNextIterationID;
 	}
+
 	SimState* generateIteration(SimState* lastIteration) {
 
 		SimState* newIteration = new SimState(lastIteration->a1.savedA1WaitTime, lastIteration->k1.savedK1WaitTime, lastIteration->k2.savedK2WaitTime, lastIteration->k1.processingK1, lastIteration->k2.processingK2, lastIteration->processedRequests);
 		int smallestNextIterationID = getNextIterationNumber(lastIteration);
-		newIteration->currentTime = smallestNextIterationID;
+		newIteration->currentTime = smallestNextIterationID; // used in output.h
 		manageNextIteration(lastIteration, newIteration, smallestNextIterationID);
 		return newIteration;
 	}
 
 
 	void manageNextIteration(SimState* lastIteration, SimState* nextIteration, int sNIID) {
+		
+		
 		nextIteration->r1.stR1 = lastIteration->r1.stR1;
 		
-	
+		
+		
 		if (lastIteration->k2.savedK2WaitTime != sNIID) {
 			nextIteration->k2.savedK2WaitTime = lastIteration->k2.savedK2WaitTime;
 			if (lastIteration->k2.processingK2 == true) {
@@ -157,7 +163,7 @@ public:
 			}
 		}
 
-
+		
 		if (nextIteration->k2.processingK2 == false) {
 			if (nextIteration->r1.stR1 != 0) {
 				nextIteration->r1.stR1 -= 1;
@@ -187,7 +193,7 @@ public:
 
 			}
 		}
-
+		
 		if (lastIteration->k1.savedK1WaitTime != sNIID) {
 			nextIteration->k1.savedK1WaitTime = lastIteration->k1.savedK1WaitTime;
 			if (lastIteration->k1.processingK1 == true) {
@@ -209,7 +215,7 @@ public:
 
 			nextIteration->k1.stringK1 += "0";
 			nextIteration->k1.stringK1WT += "n";
-			//nextIteration->r1.stringR1 += std::to_string(nextIteration->r1.stR1) + " ";
+			
 			OSS.addNewR1QueueState(sNIID);
 			nextIteration->usedGS += "n ";
 			if (nextIteration->processedRequests < MPR) {
